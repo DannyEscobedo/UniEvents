@@ -48,7 +48,7 @@ if (!isset($_SESSION["usuario"])) {
         .container {
             padding: 20px;
             text-align: right;
-            color: black;
+            color: darkblue;
             margin-right: 150px;
             margin-top: 35px;
         }
@@ -56,8 +56,9 @@ if (!isset($_SESSION["usuario"])) {
             padding: 20px;
             text-align: right;
             color: black;
-            margin-right: 150px;
+            margin-right: 140px;
             margin-top: -35px;
+            font-weight: bold;
         }
         /* Estilo del calendario */
         #calendario {
@@ -80,7 +81,7 @@ if (!isset($_SESSION["usuario"])) {
 
     <div class="container">
         <h1>¡Bienvenido de nuevo, Administrador!</h1>
-        <p>¿En que trabajaremos en esta ocasión?</p>
+        <p>¿En qué trabajaremos en esta ocasión?</p>
     </div>
 </body>
 </html>
