@@ -78,9 +78,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Botón de iniciar sesión -->
             <button type="submit" id="btnLogin" class="btn">Ingresar</button>
        
-            <!-- Dirigir a RegistrarUsuario.php por medio del link -->
+            <!-- Dirigir a RegistrarUsuario.php o RestablecerContraseña.php por medio de los links -->
             <div class="registro-link">
                 <p>¿Aún no tienes cuenta? <a href="RegistrarUsuario.php">Regístrate aquí</a></p>
+                <p>¿Olvidaste tu contraseña? <a href="RestablecerContraseña.php">Restablecer</a></p>
             </div>
         </form>
     </div>
