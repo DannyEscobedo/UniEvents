@@ -31,7 +31,7 @@ if (!isset($_SESSION["usuario"])) {
         .navbar {
             background-color: darkblue;
             overflow: hidden;
-            padding: 8px;
+            padding: 7px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -79,9 +79,8 @@ if (!isset($_SESSION["usuario"])) {
     </div>
 
     <div class="container">
-        <h1>¡Bienvenido de nuevo, Administrador@!</h1>
+        <h1>¡Bienvenido de nuevo, Administrador!</h1>
         <p>¿En que trabajaremos en esta ocasión?</p>
     </div>
-
 </body>
 </html>
