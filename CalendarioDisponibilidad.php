@@ -45,6 +45,5 @@ if (!isset($_SESSION["usuario"])) {
             calendario.render();
         });
     </script>
-
 </body>
 </html>
