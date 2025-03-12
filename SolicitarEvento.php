@@ -250,11 +250,16 @@ if (!isset($_SESSION["usuario"])) {
     </div>
 
     <script>
-        document.getElementById('fecha_elaboracion').value = new Date().toLocaleDateString('es-ES');
+    document.getElementById('fecha_elaboracion').value = new Date().toLocaleDateString('es-ES');
 
-        function toggleDisplay(estado) {
-            document.getElementById('texto_display').disabled = !estado;
+    function toggleDisplay(estado) {
+        let textoDisplay = document.getElementById('texto_display');
+        textoDisplay.disabled = !estado;
+        
+        if (!estado) {
+            textoDisplay.value = ""; // Limpiar el campo si se selecciona "No"
         }
-    </script>
+    }
+</script>
 </body>
 </html>
