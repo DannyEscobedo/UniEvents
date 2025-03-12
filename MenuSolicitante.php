@@ -62,9 +62,11 @@ if (!isset($_SESSION["usuario"])) {
             margin-top: -35px;
             font-weight: bold;
         }
+
     </style>
 </head>
 <body>
+
     <!-- Barra de navegación -->
     <div class="navbar">
         <div>
@@ -81,5 +83,6 @@ if (!isset($_SESSION["usuario"])) {
         <h1>¡Bienvenido de nuevo, Alumn@!</h1>
         <p>¿List@ para comenzar el día?</p>
     </div>
+
 </body>
 </html>
