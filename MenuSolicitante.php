@@ -21,7 +21,7 @@ if (!isset($_SESSION["usuario"])) {
             font-family: "Poppins", sans-serif;
             margin: 0;
             padding: 0;
-            background: url('fondo solicitante.png') no-repeat center center fixed;
+            background: url('fondo solicit.png') no-repeat center center fixed;
             background-size: cover;
             color: white; /* Para que el texto sea legible sobre la imagen */
         }
