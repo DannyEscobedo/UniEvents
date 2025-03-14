@@ -148,15 +148,33 @@ if (!isset($_SESSION["usuario"])) {
                     <label>Hora de Inicio:</label>
                     <select name="hora_inicio" required>
                         <option value="08:00">08:00 AM</option>
+                        <option value="08:30">08:30 AM</option>
                         <option value="09:00">09:00 AM</option>
+                        <option value="09:30">09:30 AM</option>
                         <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="12:30">12:30 PM</option>
+                        <option value="13:00">01:00 PM</option>
+                        <option value="13:30">01:30 PM</option>
                     </select>
                 </div>
                 <div>
                     <label>Hora de Fin:</label>
                     <select name="hora_fin" required>
+                        <option value="08:30">08:30 AM</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="09:30">09:30 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
                         <option value="12:00">12:00 PM</option>
+                        <option value="12:30">12:30 PM</option>
                         <option value="13:00">01:00 PM</option>
+                        <option value="13:30">01:30 PM</option>
                         <option value="14:00">02:00 PM</option>
                     </select>
                 </div>
@@ -164,8 +182,16 @@ if (!isset($_SESSION["usuario"])) {
 
             <label>Lugar:</label>
             <select name="lugar_evento" required>
-                <option value="Auditorio">Auditorio</option>
-                <option value="Sala de Juntas">Sala de Juntas</option>
+                <option value="Auditorio">Auditorio 1</option>
+                <option value="Auditorio">Auditorio 2</option>
+                <option value="Auditorio">Auditorio 3</option>
+                <option value="Auditorio">Auditorio 4</option>
+                <option value="Plazoletas">Plazoletas</option>
+                <option value="Canchas">Canchas</option>
+                <option value="Estadio">Estadio</option>
+                <option value="Alberca">Alberca</option>
+                <option value="Gimnasio">Gimnasio</option>
+                <option value="Jardines">Jardines</option>
             </select>
 
             <label>Equipo de Audio:</label>
@@ -192,16 +218,10 @@ if (!isset($_SESSION["usuario"])) {
             </div>
 
             <label>Fecha de Publicación:</label>
-            <select name="fecha_publicacion">
-                <option value="08:00">08:00 AM</option>
-                <option value="10:00">10:00 AM</option>
-            </select>
+            <input type="date" name="fecha_evento" required>
 
             <label>Fecha de término de Publicación:</label>
-            <select name="fecha_terminopublicacion">
-                <option value="08:00">08:00 AM</option>
-                <option value="10:00">10:00 AM</option>
-            </select>
+            <input type="date" name="fecha_evento" required>
 
             <label>Diseño:</label>
             <div class="checkbox-group">
