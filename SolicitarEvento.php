@@ -182,11 +182,12 @@ if (!isset($_SESSION["usuario"])) {
 
             <label>Lugar:</label>
             <select name="lugar_evento" required>
-                <option value="Auditorio">Auditorio 1</option>
-                <option value="Auditorio">Auditorio 2</option>
-                <option value="Auditorio">Auditorio 3</option>
-                <option value="Auditorio">Auditorio 4</option>
-                <option value="Plazoletas">Plazoletas</option>
+                <option value="Auditorio">Auditorio Ing. Segundo Rodriguez Alvarez</option>
+                <option value="Auditorio">Auditorio Tecnológico</option>
+                <option value="Auditorio">Auditorio Ing. Ricardo Peart</option>
+                <option value="Auditorio">Auditorio Vinculación</option>
+                <option value="Plazoletas">Plazoleta Media Luna</option>
+                <option value="Plazoletas">Plazoleta Techada</option>
                 <option value="Canchas">Canchas</option>
                 <option value="Estadio">Estadio</option>
                 <option value="Alberca">Alberca</option>
