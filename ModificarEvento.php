@@ -199,20 +199,20 @@ $conn->close();
 
             <label>Toma de Fotografías:</label>
             <div class="checkbox-group">
-               <input type="radio" name="toma_fotografias" value="Si"> Sí
-               <input type="radio" name="toma_fotografias" value="No"> No
+               <input type="radio" name="toma_fotografias" value="Si" required> Sí
+               <input type="radio" name="toma_fotografias" value="No" required> No
             </div>
 
             <label>Maestro/a de Ceremonias:</label>
             <div class="checkbox-group">
-                <input type="radio" name="maestro_ceremonia" value="Si"> Sí
-                <input type="radio" name="maestro_ceremonia" value="No"> No
+                <input type="radio" name="maestro_ceremonia" value="Si" required> Sí
+                <input type="radio" name="maestro_ceremonia" value="No" required> No
             </div>
 
             <label>Display:</label>
             <div class="checkbox-group">
-               <input type="radio" name="display" value="Si" onclick="toggleDisplay()"> Sí
-               <input type="radio" name="display" value="No" onclick="toggleDisplay()"> No
+               <input type="radio" name="display" value="Si" onclick="toggleDisplay()" required> Sí
+               <input type="radio" name="display" value="No" onclick="toggleDisplay()" required> No
            </div>
 
             <label>Texto para Display:</label>
