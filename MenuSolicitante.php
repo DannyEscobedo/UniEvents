@@ -6,6 +6,18 @@ if (!isset($_SESSION["usuario"])) {
     header("Location: IniciarSesion.php"); // Redirige al login si no hay sesión
     exit();
 }
+
+//Mostrar mensaje de modificación del evento
+if (isset($_SESSION["mensaje"])) {
+    echo "<script>alert('" . $_SESSION["mensaje"] . "');</script>";
+    unset($_SESSION["mensaje"]); // Borrar mensaje para que no se muestre otra vez
+}
+
+//Mostrar mensaje de cancelación del evento
+if (isset($_SESSION["mensaje"])) {
+    echo "<script>alert('" . $_SESSION["mensaje"] . "');</script>";
+    unset($_SESSION["mensaje"]); // Eliminar el mensaje para que no se repita
+}
 ?>
 
 <!DOCTYPE html>
@@ -73,8 +85,8 @@ if (!isset($_SESSION["usuario"])) {
             <a href="MenuSolicitante.php">Inicio</a>
             <a href="SolicitarEvento.php">Solicitar Evento</a>
             <a href="EstatusEvento.php">Estatus del Evento</a>
+            <a href="FichaTecnica.php">Ficha Técnica del Evento</a>
             <a href="SubirFlyer.php">Subir Flyer</a>
-            <a href="Perfil.php">Perfil</a>
         </div>
         <a href="CerrarSesion.php">Cerrar sesión</a>
     </div>
