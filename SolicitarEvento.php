@@ -60,14 +60,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $difusion_externa = $_POST["difusion_externa"] ?? "No";
     $difusion_fecha_inicio = $_POST["difusion_fecha_inicio"] ?? null;
     $difusion_fecha_termino = $_POST["difusion_fecha_termino"] ?? null;
-    $diseno = $_POST["diseno"] ?? null;
-    $impresion = $_POST["impresion"] ?? "No seleccionado";
+    $diseno = $_POST["diseno"] ?? "No";
+    $impresion = $_POST["impresion"] ?? "No";
     $num_copias = isset($_POST["num_copias"]) && is_numeric($_POST["num_copias"]) ? (int)$_POST["num_copias"] : 0;
     
     // Corregido: Siempre garantizar que el valor sea "Si" o "No"
-   $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? "Si" : "No";
-   $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? "Si" : "No";
-   $display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? "Si" : "No";
+   $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
+$maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
+$display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
 
     $texto_display = $_POST["texto_display"] ?? null;
     $num_control = $_SESSION["usuario"]; // Asegurar que la variable tiene un valor antes de la consulta
@@ -253,8 +253,8 @@ exit();
 
             <label>Impresión y Otros:</label>
             <div class="checkbox-group">
-                <input type="radio" id="diploma" name="impresion" value="Diploma" onchange="validarImpresion()" required> Diploma
-                <input type="radio" id="banner" name="impresion" value="Banner" onchange="validarImpresion()" required> Banner digital
+                <input type="radio" id="diploma" name="impresion" value="Diploma" onchange="validarImpresion()"> Diploma
+                <input type="radio" id="banner" name="impresion" value="Banner" onchange="validarImpresion()"> Banner digital
             </div>
             <p>*Los diseños que no sean producidos en comunicación y difusión, deberán ser avalados por ese departamento, con el fin de que se ajusten a los lineamientos de identidad gráfica institucional, y para solicitar la producción de un diseño en este departamento se considerar 5 días hábiles de antelación a su posterior reproducción y/o difusión.</p>
 
@@ -405,6 +405,21 @@ exit();
         }
     </style>
 
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener("click", function () {
+            if (this.checked) {
+                this.wasChecked = !this.wasChecked;
+            }
+            if (!this.wasChecked) {
+                this.checked = false;
+            }
+        });
+    });
+});
+</script>
+
         <script>
         document.addEventListener("DOMContentLoaded", function() {
             let hoy = new Date().toISOString().split("T")[0]; // Obtener la fecha actual en formato YYYY-MM-DD
@@ -423,30 +438,38 @@ exit();
            });
        </script>
 
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            validarImpresion(); // Llamar a la función cuando la página cargue
-        });
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        validarImpresion(); // Llamar a la función cuando la página cargue
+    });
 
-        function validarImpresion() {
-            let diploma = document.getElementById("diploma").checked;
-            let banner = document.getElementById("banner").checked;
-            let numCopias = document.getElementById("num_copias");
+    function validarImpresion() {
+        let diploma = document.getElementById("diploma").checked;
+        let numCopias = document.getElementById("num_copias");
 
-            if (diploma) {
-                numCopias.disabled = false;
-            } else {
-                numCopias.disabled = true;
-                numCopias.value = 0;
-            }
+        if (diploma) {
+            numCopias.disabled = false;
+        } else {
+            numCopias.disabled = true;
+            numCopias.value = 0;
+        }
+    }
+
+    function validarLongitud(input) {
+        // Eliminar ceros iniciales
+        input.value = input.value.replace(/^0+/, '');
+        
+        // Si el campo está vacío después de eliminar ceros, establecerlo en 0
+        if (input.value === '') {
+            input.value = 0;
         }
 
-        function validarLongitud(input) {
-            if (input.value.length > 4) {
-                input.value = input.value.slice(0, 4); // Recortar a 4 dígitos si se pasa
-            }
+        // Limitar la longitud a 4 dígitos
+        if (input.value.length > 4) {
+            input.value = input.value.slice(0, 4);
         }
-        </script>
+    }
+</script>
 
 <script>
     function toggleDisplay() {
