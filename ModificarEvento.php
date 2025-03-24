@@ -78,44 +78,44 @@ $conn->close();
             </select>
 
             <label>Nombre del Evento:</label>
-            <input type="text" name="nombre_evento" maxlength="25" required>
+            <input type="text" name="nombre_evento" value="<?= $evento['nombre_evento'] ?? ''; ?>" maxlength="25" required>
 
             <label>Fecha del Evento:</label>
-            <input type="date" id="fecha_evento" name="fecha_evento" required>
+                <input type="date" id="fecha_evento" name="fecha_evento" value="<?= $evento['fecha_evento'] ?? ''; ?>" required>
 
             <div class="checkbox-group">
                 <div>
                     <label>Hora de Inicio:</label>
                     <select name="hora_inicio" required>
-                        <option value="08:00">08:00 AM</option>
-                        <option value="08:30">08:30 AM</option>
-                        <option value="09:00">09:00 AM</option>
-                        <option value="09:30">09:30 AM</option>
-                        <option value="10:00">10:00 AM</option>
-                        <option value="10:30">10:30 AM</option>
-                        <option value="11:00">11:00 AM</option>
-                        <option value="11:30">11:30 AM</option>
-                        <option value="12:00">12:00 PM</option>
-                        <option value="12:30">12:30 PM</option>
-                        <option value="13:00">01:00 PM</option>
-                        <option value="13:30">01:30 PM</option>
+                        <option value="08:00" <?= ($evento['hora_inicio'] == "08:00") ? 'selected' : ''; ?>>08:00 AM</option>
+                        <option value="08:30" <?= ($evento['hora_inicio'] == "08:30") ? 'selected' : ''; ?>>08:30 AM</option>
+                        <option value="09:00" <?= ($evento['hora_inicio'] == "08:00") ? 'selected' : ''; ?>>09:00 AM</option>
+                        <option value="09:30" <?= ($evento['hora_inicio'] == "08:30") ? 'selected' : ''; ?>>09:30 AM</option>
+                        <option value="10:00" <?= ($evento['hora_inicio'] == "08:00") ? 'selected' : ''; ?>>10:00 AM</option>
+                        <option value="10:30" <?= ($evento['hora_inicio'] == "08:30") ? 'selected' : ''; ?>>10:30 AM</option>
+                        <option value="11:00" <?= ($evento['hora_inicio'] == "08:00") ? 'selected' : ''; ?>>11:00 AM</option>
+                        <option value="11:30" <?= ($evento['hora_inicio'] == "08:30") ? 'selected' : ''; ?>>11:30 AM</option>
+                        <option value="12:00" <?= ($evento['hora_inicio'] == "08:00") ? 'selected' : ''; ?>>12:00 PM</option>
+                        <option value="12:30" <?= ($evento['hora_inicio'] == "08:30") ? 'selected' : ''; ?>>12:30 PM</option>
+                        <option value="13:00" <?= ($evento['hora_inicio'] == "08:00") ? 'selected' : ''; ?>>01:00 PM</option>
+                        <option value="13:30" <?= ($evento['hora_inicio'] == "08:30") ? 'selected' : ''; ?>>01:30 PM</option>
                     </select>
                 </div>
                 <div>
                     <label>Hora de Fin:</label>
                     <select name="hora_fin" required>
-                        <option value="08:30">08:30 AM</option>
-                        <option value="09:00">09:00 AM</option>
-                        <option value="09:30">09:30 AM</option>
-                        <option value="10:00">10:00 AM</option>
-                        <option value="10:30">10:30 AM</option>
-                        <option value="11:00">11:00 AM</option>
-                        <option value="11:30">11:30 AM</option>
-                        <option value="12:00">12:00 PM</option>
-                        <option value="12:30">12:30 PM</option>
-                        <option value="13:00">01:00 PM</option>
-                        <option value="13:30">01:30 PM</option>
-                        <option value="14:00">02:00 PM</option>
+                        <option value="08:30" <?= ($evento['hora_fin'] == "09:30") ? 'selected' : ''; ?>>08:30 AM</option>
+                        <option value="09:00" <?= ($evento['hora_fin'] == "09:00") ? 'selected' : ''; ?>>09:00 AM</option>
+                        <option value="09:30" <?= ($evento['hora_fin'] == "09:30") ? 'selected' : ''; ?>>09:30 AM</option>
+                        <option value="10:00" <?= ($evento['hora_fin'] == "10:00") ? 'selected' : ''; ?>>10:00 AM</option>
+                        <option value="10:30" <?= ($evento['hora_fin'] == "10:30") ? 'selected' : ''; ?>>10:30 AM</option>
+                        <option value="11:00" <?= ($evento['hora_fin'] == "11:00") ? 'selected' : ''; ?>>11:00 AM</option>
+                        <option value="11:30" <?= ($evento['hora_fin'] == "11:30") ? 'selected' : ''; ?>>11:30 AM</option>
+                        <option value="12:00" <?= ($evento['hora_fin'] == "12:00") ? 'selected' : ''; ?>>12:00 PM</option>
+                        <option value="12:30" <?= ($evento['hora_fin'] == "12:30") ? 'selected' : ''; ?>>12:30 PM</option>
+                        <option value="13:00" <?= ($evento['hora_fin'] == "13:00") ? 'selected' : ''; ?>>01:00 PM</option>
+                        <option value="13:30" <?= ($evento['hora_fin'] == "13:30") ? 'selected' : ''; ?>>01:30 PM</option>
+                        <option value="14:00" <?= ($evento['hora_fin'] == "14:00") ? 'selected' : ''; ?>>02:00 PM</option>
                     </select>
                 </div>
             </div>
@@ -138,37 +138,37 @@ $conn->close();
 
             <label>Equipo de Audio:</label>
             <div class="checkbox-group">
-                <input type="radio" name="equipo_audio" value="Instal. Equipo Audio"> Instalación Equipo de Audio
-                <input type="radio" name="equipo_audio" value="Microfono Alámbrico"> Micrófono Alámbrico
-                <input type="radio" name="equipo_audio" value="Microfono Inalámbrico"> Micrófono Inalámbrico
-                <input type="radio" name="equipo_audio" value="Microfono Podium"> Micrófono para Podium
-                <input type="radio" name="equipo_audio" value="Cable laptop"> Cable para audio laptop
-                <input type="radio" name="equipo_audio" value="Micro Diadema"> Micro Diadema
-                <input type="radio" name="equipo_audio" value="Micro Solapa"> Micro Solapa
+                <input type="radio" name="equipo_audio" value="Instal. Equipo Audio" <?= ($evento['equipo_audio'] == "Instal. Equipo Audio") ? 'checked' : ''; ?>> Instalación Equipo de Audio
+                <input type="radio" name="equipo_audio" value="Microfono Alámbrico" <?= ($evento['equipo_audio'] == "Microfono Alámbrico") ? 'checked' : ''; ?>> Micrófono Alámbrico
+                <input type="radio" name="equipo_audio" value="Microfono Inalámbrico" <?= ($evento['equipo_audio'] == "Microfono Inalámbrico") ? 'checked' : ''; ?>> Microfono Inalámbrico
+                <input type="radio" name="equipo_audio" value="Microfono Podium" <?= ($evento['equipo_audio'] == "Microfono Podium") ? 'checked' : ''; ?>> Microfono para Podium
+                <input type="radio" name="equipo_audio" value="Cable laptop" <?= ($evento['equipo_audio'] == "Cable laptop") ? 'checked' : ''; ?>> Cable para audio laptop
+                <input type="radio" name="equipo_audio" value="Micro Diadema" <?= ($evento['equipo_audio'] == "Micro Diadema") ? 'checked' : ''; ?>> Micro Diadema
+                <input type="radio" name="equipo_audio" value="Micro Solapa" <?= ($evento['equipo_audio'] == "Micro Solapa") ? 'checked' : ''; ?>> Micro Solapa
             </div>
             <p>*NO SE CUENTA CON CABLES PARA MAC</p>
 
             <label>Difusión Interna:</label>
             <div class="checkbox-group">
-                <input type="radio" name="difusion_interna" value="Volante"> Volante
-                <input type="radio" name="difusion_interna" value="Oficios"> Oficios
-                <input type="radio" name="difusion_interna" value="Correo Electrónico"> Correo Electrónico
+                <input type="radio" name="difusion_interna" value="Volante" <?= ($evento['difusion_interna'] == "Volante") ? 'checked' : ''; ?>> Volante
+                <input type="radio" name="difusion_interna" value="Oficios" <?= ($evento['difusion_interna'] == "Oficios") ? 'checked' : ''; ?>> Oficios
+                <input type="radio" name="difusion_interna" value="Correo Electrónico" <?= ($evento['difusion_interna'] == "Correo Electrónico") ? 'checked' : ''; ?>> Correo Electrónico
             </div>
 
             <label>Difusión Externa:</label>
             <div class="checkbox-group">
-                <input type="radio" name="difusion_externa" value="Pagina Web"> Página Web
-                <input type="radio" name="difusion_externa" value="Redes Sociales"> Redes Sociales
-                <input type="radio" name="difusion_externa" value="Radio"> Radio
-                <input type="radio" name="difusion_externa" value="Prensa Escrita"> Prensa Escrita
-                <input type="radio" name="difusion_externa" value="TV"> TV
+                <input type="radio" name="difusion_externa" value="Pagina Web" <?= ($evento['difusion_externa'] == "Pagina Web") ? 'checked' : ''; ?>> Página Web
+                <input type="radio" name="difusion_externa" value="Redes Sociales" <?= ($evento['difusion_externa'] == "Redes Sociales") ? 'checked' : ''; ?>> Redes Sociales
+                <input type="radio" name="difusion_externa" value="Radio" <?= ($evento['difusion_externa'] == "Radio") ? 'checked' : ''; ?>> Radio
+                <input type="radio" name="difusion_externa" value="Prensa Escrita" <?= ($evento['difusion_externa'] == "Prensa Escrita") ? 'checked' : ''; ?>> Prensa Escrita
+                <input type="radio" name="difusion_externa" value="TV" <?= ($evento['difusion_externa'] == "TV") ? 'checked' : ''; ?>> TV
             </div>
 
             <label>Fecha de Publicación:</label>
-            <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" required>
+                <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" value="<?= $evento['difusion_fecha_inicio'] ?? ''; ?>" required>
 
-            <label>Fecha de término de Publicación:</label>
-            <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" required>
+                <label>Fecha de término de Publicación:</label>
+                <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" value="<?= $evento['difusion_fecha_termino'] ?? ''; ?>" required>
 
             <label>Diseño:</label>
             <div class="checkbox-group">
@@ -181,14 +181,9 @@ $conn->close();
 
             <label>Impresión y Otros:</label>
             <div class="checkbox-group">
-        <input type="radio" id="diploma" name="impresion" value="Diploma" 
-            onchange="validarImpresion()" 
-            <?= ($evento['impresion'] == 'Diploma') ? 'checked' : ''; ?> required> Diploma
-
-        <input type="radio" id="banner" name="impresion" value="Banner" 
-            onchange="validarImpresion()" 
-            <?= ($evento['impresion'] == 'Banner') ? 'checked' : ''; ?> required> Banner digital
-    </div>
+                <input type="radio" id="diploma" name="impresion" value="Diploma" onchange="validarImpresion()"> Diploma
+                <input type="radio" id="banner" name="impresion" value="Banner" onchange="validarImpresion()"> Banner digital
+            </div>
             <p>*Los diseños que no sean producidos en comunicación y difusión, deberán ser avalados por ese departamento, con el fin de que se ajusten a los lineamientos de identidad gráfica institucional, y para solicitar la producción de un diseño en este departamento se considerar 5 días hábiles de antelación a su posterior reproducción y/o difusión.</p>
 
             <label>Impresión/Copias:</label>
@@ -216,21 +211,21 @@ $conn->close();
            </div>
 
             <label>Texto para Display:</label>
-                <input type="text" id="texto_display" name="texto_display" disabled>
+                <input type="text" name="texto_display" value="<?= $evento['texto_display'] ?? ''; ?>">
 
             <button type="submit">Enviar modificación</button>
         </form>
     </div>
 
-    <script>
+        <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let hoy = new Date().toISOString().split("T")[0]; // Obtener la fecha actual en formato YYYY-MM-DD
+        let hoy = new Date().toISOString().split("T")[0]; // Obtener la fecha actual en formato YYYY-MM-DD
 
-            // Aplicar restricción de fecha mínima a los 3 campos
-            document.getElementById("fecha_evento").setAttribute("min", hoy);
-            document.getElementById("difusion_fecha_inicio").setAttribute("min", hoy);
-            document.getElementById("difusion_fecha_termino").setAttribute("min", hoy);
-        });
+        // Aplicar restricción de fecha mínima a los 3 campos
+        document.getElementById("fecha_evento").setAttribute("min", hoy);
+        document.getElementById("difusion_fecha_inicio").setAttribute("min", hoy);
+        document.getElementById("difusion_fecha_termino").setAttribute("min", hoy);
+            });
         </script>
 
        <script>
@@ -241,29 +236,37 @@ $conn->close();
        </script>
 
       <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            validarImpresion(); // Llamar a la función cuando la página cargue
-        });
+    document.addEventListener("DOMContentLoaded", function() {
+        validarImpresion(); // Llamar a la función cuando la página cargue
+    });
 
-        function validarImpresion() {
-            let diploma = document.getElementById("diploma").checked;
-            let banner = document.getElementById("banner").checked;
-            let numCopias = document.getElementById("num_copias");
+    function validarImpresion() {
+        let diploma = document.getElementById("diploma").checked;
+        let numCopias = document.getElementById("num_copias");
 
-            if (diploma) {
-                numCopias.disabled = false;
-            } else {
-                numCopias.disabled = true;
-                numCopias.value = 0;
-            }
+        if (diploma) {
+            numCopias.disabled = false;
+        } else {
+            numCopias.disabled = true;
+            numCopias.value = ''; // Se limpia el campo en lugar de poner 0
+        }
+    }
+
+    function validarLongitud(input) {
+        // Eliminar ceros iniciales
+        input.value = input.value.replace(/^0+/, '');
+        
+        // Si el campo está vacío después de eliminar ceros, establecerlo en 0
+        if (input.value === '') {
+            input.value = 0;
         }
 
-        function validarLongitud(input) {
-            if (input.value.length > 4) {
-                input.value = input.value.slice(0, 4); // Recortar a 4 dígitos si se pasa
-            }
+        // Limitar la longitud a 4 dígitos
+        if (input.value.length > 4) {
+            input.value = input.value.slice(0, 4);
         }
-        </script>
+    }
+</script>
 
         <script>
     function toggleDisplay() {
@@ -403,6 +406,9 @@ document.addEventListener("DOMContentLoaded", function () {
             border-radius: 5px;
             cursor: pointer;
             margin-top: 20px;
+            width: 100%; /* Hace que el botón ocupe todo el ancho */
+            display: block; /* Asegura que ocupe toda la línea */
+            text-align: center; /* Centra el texto dentro del botón */
         }
 
         button:hover {
