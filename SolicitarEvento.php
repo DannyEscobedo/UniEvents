@@ -139,25 +139,39 @@ exit();
             <input type="date" name="fecha_elaboracion_visible" value="<?php echo date('Y-m-d'); ?>" disabled>
             <input type="hidden" name="fecha_elaboracion" value="<?php echo date('Y-m-d'); ?>">
 
-            <label>Departamento Solicitante:</label>
+            <label>Departamento Solicitante (Campo Obligatorio):</label>
             <select name="depto_solicitante" required>
-                <option value="Depto. Sistemas Computacionales">Depto. Sistemas Computacionales</option>
-                <option value="Depto. Industrial">Depto. Industrial</option>
-                <option value="Depto. Gestión Empresarial">Depto. Gestión Empresarial</option>
-                <option value="Depto. Mecánica">Depto. Mecánica</option>
-                <option value="Depto. Materiales">Depto. Materiales</option>
-                <option value="Depto. Mecatrónica">Depto. Mecatrónica</option>
+                <option value="Depto. Ciencias Basicas">Depto. Ciencias Básicas</option>
+                <option value="Depto. Industrial">Depto. Ing. Industrial</option>
+                <option value="Depto. Economico">Depto. Económico Admin.</option>
+                <option value="Depto. Mantenimiento Equipo">Depto. Mantenimineto de Equipo</option>
+                <option value="Depto. Centro Informacion">Depto. Centro de Info.</option>
+                <option value="Depto. Escolares">Depto. Servicios Escolares</option>
+                <option value="Depto. Planeacion">Depto. Planeacion y presup.</option>
+                <option value="Depto. RH">Depto. Recursos Humanos</option>
+                <option value="Depto. Calidad">Depto. de Calidad</option>
+                <option value="Depto. Metal Metalurgia">Depto. Metal Metalurgia</option>
+                <option value="Depto. Recursos materiales y servicios">Depto. Rec. Materiales y Serv.</option>
+                <option value="Depto. Idiomas">Depto. Centro de Idiomas</option>
+                <option value="Depto. Electrica elect">Depto. Eléctrica Electrónica</option>
+                <option value="Depto. Sistemas">Depto. Ing. Sistemas</option>
+                <option value="Depto. Mecatrónica">Depto. Ing. Mecatrónica</option>
+                <option value="Depto. Vinculacion">Depto. Vinculación</option>
+                <option value="Depto. Distancia">Depto. Educación a Distancia</option>
+                <option value="Depto. Sub Admin">Subdirección Admin.</option>
+                <option value="Depto. Sub Planeacion">Subdirección de Planeación</option>
+                <option value="Depto. Sub Academica">Subdirección Académica</option>
             </select>
 
-            <label>Nombre del Evento:</label>
+            <label>Nombre del Evento (Campo Obligatorio):</label>
             <input type="text" name="nombre_evento" maxlength="25" required>
 
-            <label>Fecha del Evento:</label>
+            <label>Fecha del Evento (Campo Obligatorio):</label>
             <input type="date" id="fecha_evento" name="fecha_evento" required>
 
             <div class="checkbox-group">
                 <div>
-                    <label>Hora de Inicio:</label>
+                    <label>Hora de Inicio (Campo Obligatorio):</label>
                     <select name="hora_inicio" required>
                         <option value="08:00">08:00 AM</option>
                         <option value="08:30">08:30 AM</option>
@@ -174,7 +188,7 @@ exit();
                     </select>
                 </div>
                 <div>
-                    <label>Hora de Fin:</label>
+                    <label>Hora de Fin (Campo Obligatorio):</label>
                     <select name="hora_fin" required>
                         <option value="08:30">08:30 AM</option>
                         <option value="09:00">09:00 AM</option>
@@ -192,7 +206,7 @@ exit();
                 </div>
             </div>
 
-            <label>Lugar:</label>
+            <label>Lugar (Campo Obligatorio):</label>
             <select name="lugar_evento" required>
                 <option value="Auditorio Segundo Rodriguez">Auditorio Ing. Segundo Rodriguez Alvarez</option>
                 <option value="Auditorio Tecnológico">Auditorio Tecnológico</option>
@@ -206,7 +220,6 @@ exit();
                 <option value="Gimnasio">Gimnasio</option>
                 <option value="Jardines">Jardines</option>
             </select>
-            <p>*SI EL EVENTO ES CANCELADO, FAVOR DE AVISAR A LA BREVEDAD POSIBLE</p>
 
             <label>Equipo de Audio:</label>
             <div class="checkbox-group">
@@ -236,10 +249,10 @@ exit();
                 <input type="radio" name="difusion_externa" value="TV"> TV
             </div>
 
-            <label>Fecha de Publicación:</label>
+            <label>Fecha de Publicación (Campo Obligatorio):</label>
             <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" required>
 
-            <label>Fecha de término de Publicación:</label>
+            <label>Fecha de término de Publicación (Campo Obligatorio):</label>
             <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" required>
 
             <label>Diseño:</label>
@@ -264,19 +277,19 @@ exit();
             </div>
             <p>*Anexar por CORREO ELECTRÓNICO los respectivos nombres de quienes recibirán reconocimiento.</p>
 
-            <label>Toma de Fotografías:</label>
+            <label>Toma de Fotografías (Campo Obligatorio):</label>
             <div class="checkbox-group">
                <input type="radio" name="toma_fotografias" value="sí" required> Sí
                <input type="radio" name="toma_fotografias" value="no" required> No
             </div>
 
-            <label>Maestro de Ceremonia:</label>
+            <label>Maestro de Ceremonia (Campo Obligatorio):</label>
             <div class="checkbox-group">
                 <input type="radio" name="maestro_ceremonia" value="sí" required> Sí
                 <input type="radio" name="maestro_ceremonia" value="no" required> No
             </div>
 
-            <label>Display:</label>
+            <label>Display (Campo Obligatorio):</label>
             <div class="checkbox-group">
                <input type="radio" name="display" value="Si" onclick="toggleDisplay()" required> Sí
                <input type="radio" name="display" value="No" onclick="toggleDisplay()" required> No
