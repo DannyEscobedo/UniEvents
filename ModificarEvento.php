@@ -1,113 +1,41 @@
 <?php
-session_start();  // Iniciar sesión
+session_start();  
 
-// Verifica si la sesión está activa
+// Verificar sesión
 if (!isset($_SESSION["usuario"])) {
-    header("Location: IniciarSesion.php"); // Redirige al login si no hay sesión
+    header("Location: IniciarSesion.php");
     exit();
 }
 
-// Configurar la zona horaria de México
 date_default_timezone_set('America/Mexico_City');
-
-$fecha_elaboracion = isset($_POST["fecha_elaboracion"]) && !empty($_POST["fecha_elaboracion"]) 
-    ? $_POST["fecha_elaboracion"] 
-    : date("Y-m-d");  // Si está vacío, usar la fecha actual del servidor
-
-// Incluir el archivo de conexión a la base de datos
 include("conexion.php");
 
-// Verificar si el nombre del solicitante ya está en la sesión
-if (!isset($_SESSION["nombre"])) {
-    $num_control = $_SESSION["usuario"];  // Definir aquí antes de la consulta
-    
-    $sql_nombre = "SELECT nombres_usuarios, apellido_paterno, apellido_materno FROM usuarios WHERE num_control = ?";
-    if ($stmt_nombre = $conn->prepare($sql_nombre)) {
-        $stmt_nombre->bind_param("s", $num_control); // Pasar correctamente la variable aquí
-        $stmt_nombre->execute();
-        $stmt_nombre->bind_result($nombre, $apellido_paterno, $apellido_materno);
-
-        if ($stmt_nombre->fetch()) {
-            $_SESSION["nombre"] = trim("$nombre $apellido_paterno $apellido_materno");
-        } else {
-            $_SESSION["nombre"] = "Desconocido"; // Si no encuentra el usuario
-        }
-
-        $stmt_nombre->close();
-    }
+// Verificar si se recibió el número de solicitud
+if (!isset($_POST["num_solicitud"])) {
+    echo "No se recibió el número de solicitud.";
+    exit();
 }
 
-// Ahora $_SESSION["nombre"] ya tiene el nombre del usuario
-$evento_solicitante_nombre = $_SESSION["nombre"];
+$num_solicitud = $_POST["num_solicitud"];
 
-// Verificar si el formulario fue enviado
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    // Ver los datos recibidos del formulario (para depuración)
-    echo "<pre>";
-    var_dump($_POST);
-    echo "</pre>";
+// Obtener datos del evento
+$sql = "SELECT * FROM solicitud WHERE num_solicitud = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $num_solicitud);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    // Recibir los datos del formulario
-    $depto_solicitante = $_POST["depto_solicitante"] ?? "No especificado";
-    $nombre_evento = isset($_POST["nombre_evento"]) ? trim($_POST["nombre_evento"]) : "Sin Nombre";
-    $fecha_evento = $_POST["fecha_evento"];
-    $hora_inicio = $_POST["hora_inicio"];
-    $hora_fin = $_POST["hora_fin"];
-    $lugar_evento = $_POST["lugar_evento"];
-    $equipo_audio = $_POST["equipo_audio"] ?? "No";
-    $difusion_interna = $_POST["difusion_interna"] ?? "No";
-    $difusion_externa = $_POST["difusion_externa"] ?? "No";
-    $difusion_fecha_inicio = $_POST["difusion_fecha_inicio"] ?? null;
-    $difusion_fecha_termino = $_POST["difusion_fecha_termino"] ?? null;
-    $diseno = $_POST["diseno"] ?? "No";
-    $impresion = $_POST["impresion"] ?? "No";
-    $num_copias = isset($_POST["num_copias"]) && is_numeric($_POST["num_copias"]) ? (int)$_POST["num_copias"] : 0;
-    
-    // Corregido: Siempre garantizar que el valor sea "Si" o "No"
-   $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
-   $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
-   $display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
-
-    $texto_display = $_POST["texto_display"] ?? null;
-    $num_control = $_SESSION["usuario"]; // Asegurar que la variable tiene un valor antes de la consulta
-    $evento_status = "Pendiente";
-
-    // Nombre del solicitante
-    $evento_solicitante_nombre = isset($_SESSION["nombre"]) ? trim($_SESSION["nombre"]) : "Desconocido";
-
-    // Preparar la consulta SQL
-    $sql = "INSERT INTO solicitud 
-        (fecha_elaboracion, depto_solicitante_nombre, nombre_evento, fecha_evento, hora_inicio, hora_fin, lugar, equipo_audio, 
-         difusion_interna, difusion_externa, difusion_fecha_inicio, difusion_fecha_termino, diseno, 
-         impresion, num_copias, toma_fotografias, maestro_ceremonia, display, texto_display, num_control, evento_status, evento_solicitante_nombre) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("ssssssssssssssisisssss", 
-            $fecha_elaboracion, $depto_solicitante, $nombre_evento, 
-            $fecha_evento, $hora_inicio, $hora_fin, $lugar_evento, 
-            $equipo_audio, $difusion_interna, $difusion_externa, 
-            $difusion_fecha_inicio, $difusion_fecha_termino, $diseno, 
-            $impresion, $num_copias, $toma_fotografias, 
-            $maestro_ceremonia, $display, $texto_display, 
-            $num_control, $evento_status, $evento_solicitante_nombre
-        );
-
-       if ($stmt->execute()) {
-    $_SESSION["mensaje"] = "Solicitud enviada correctamente.";
-} else {
-    $_SESSION["mensaje"] = "Error al guardar la solicitud: " . $stmt->error;
+if ($result->num_rows === 0) {
+    echo "Evento no encontrado.";
+    exit();
 }
+
+$evento = $result->fetch_assoc();
+$hora_inicio = date("h:i A", strtotime($evento['hora_inicio']));
+$hora_fin = date("h:i A", strtotime($evento['hora_fin']));
 
 $stmt->close();
 $conn->close();
-
-// Redirigir a MenuSolicitante.php después de procesar todo
-header("Location: MenuSolicitante.php");
-exit();
-}
-}
 ?>
 
 <!DOCTYPE html>
@@ -115,8 +43,8 @@ exit();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitud de Servicios</title>
-     <div class="navbar">
+    <title>Modificar Evento</title>
+    <div class="navbar">
         <div>
             <a href="MenuSolicitante.php">Inicio</a>
             <a href="SolicitarEvento.php">Solicitar Evento</a>
@@ -126,12 +54,13 @@ exit();
         </div>
         <a href="CerrarSesion.php">Cerrar sesión</a>
     </div>
-    
 </head>
 <body>
+    <form action="GuardarModificacion.php" method="post">
+        <input type="hidden" name="num_solicitud" value="<?php echo $evento['num_solicitud']; ?>">
 
-    <div class="container">
-        <h2>Solicitud de Servicios</h2>
+        <div class="container">
+        <h2>Modificar Evento</h2>
         <h2>Al Departamento de Comunicación y Difusión</h2>
 
         <form id="solicitudForm" method="POST" action="SolicitarEvento.php">
@@ -139,168 +68,266 @@ exit();
             <input type="date" name="fecha_elaboracion_visible" value="<?php echo date('Y-m-d'); ?>" disabled>
             <input type="hidden" name="fecha_elaboracion" value="<?php echo date('Y-m-d'); ?>">
 
-            <label>Departamento Solicitante (Campo Obligatorio):</label>
-            <select name="depto_solicitante" required>
-                <option value="Depto. Ciencias Básicas">Depto. Ciencias Básicas</option>
-                <option value="Depto. Ing. Industrial">Depto. Ing. Industrial</option>
-                <option value="Depto. Económico Admin.">Depto. Económico Admin.</option>
-                <option value="Depto. Mantenimiento de Equipo">Depto. Mantenimiento de Equipo</option>
-                <option value="Depto. Centro de Información">Depto. Centro de Información</option>
-                <option value="Depto. Servicios Escolares">Depto. Servicios Escolares</option>
-                <option value="Depto. Planeación">Depto. Planeación</option>
-                <option value="Depto. Recursos Humanos">Depto. Recursos Humanos</option>
-                <option value="Depto. de Calidad">Depto. de Calidad</option>
-                <option value="Depto. Metal Metalurgia">Depto. Metal Metalurgia</option>
-                <option value="Depto. Recursos materiales y servicios">Depto. Recursos materiales y servicios.</option>
-                <option value="Depto. Centro de Idiomas">Depto. Centro de Idiomas</option>
-                <option value="Depto. Eléctrica electrónica">Depto. Eléctrica electrónica</option>
-                <option value="Depto. Ing. Sistemas">Depto. Ing. Sistemas</option>
-                <option value="Depto. Ing Mecatrónica">Depto. Ing Mecatrónica</option>
-                <option value="Depto. Vinculacion">Depto. Vinculacion</option>
-                <option value="Depto. Educación a Distancia">Depto. Educación a Distancia</option>
-                <option value="Depto. Subdirección Admin">Depto. Subdirección Admin</option>
-                <option value="Depto. Subdirección Planeación">Depto. Subdirección Planeación</option>
-                <option value="Depto. Subdirección Académica">Depto. Subdirección Académica</option>
-            </select>
+            <label>Departamento Solicitante:</label>
+<select name="depto_solicitante" required>
+     <option value="Depto. Ciencias Básicas" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Ciencias Básicas' ? 'selected' : ''; ?>>Depto. Ciencias Básicas</option>
+    <option value="Depto. Ing. Industrial" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Ing. Industrial' ? 'selected' : ''; ?>>Depto. Ing. Industrial</option>
+    <option value="Depto. Económico Admin." <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Económico Admin.' ? 'selected' : ''; ?>>Depto. Económico Admin.</option>
+    <option value="Depto. Mantenimiento de Equipo" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Mantenimiento de Equipo' ? 'selected' : ''; ?>>Depto. Mantenimiento de Equipo</option>
+    <option value="Depto. Centro de Información" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Centro de Información' ? 'selected' : ''; ?>>Depto. Centro de Información</option>
+    <option value="Depto. Servicios Escolares" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Servicios Escolares' ? 'selected' : ''; ?>>Depto. Servicios Escolares</option>
+    <option value="Depto. Planeación" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Planeación' ? 'selected' : ''; ?>>Depto. Planeación</option>
+    <option value="Depto. Recursos Humanos" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Recursos Humanos' ? 'selected' : ''; ?>>Depto. Recursos Humanos</option>
+    <option value="Depto. de Calidad" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. de Calidad' ? 'selected' : ''; ?>>Depto. de Calidad</option>
+    <option value="Depto. Metal Metalurgia" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Metal Metalurgia' ? 'selected' : ''; ?>>Depto. Metal Metalurgia</option>
+    <option value="Depto. Recursos materiales y servicios" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Recursos materiales y servicios' ? 'selected' : ''; ?>>Depto. Recursos materiales y servicios</option>
+    <option value="Depto. Centro de Idiomas" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Centro de Idiomas' ? 'selected' : ''; ?>>Depto. Centro de Idiomas</option>
+    <option value="Depto. Eléctrica electrónica" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Eléctrica electrónica' ? 'selected' : ''; ?>>Depto. Eléctrica Electrónica</option>
+    <option value="Depto. Ing. Sistemas" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Ing. Sistemas' ? 'selected' : ''; ?>>Depto. Ing. Sistemas</option>
+    <option value="Depto. Ing Mecatrónica" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Ing. Mecatrónica' ? 'selected' : ''; ?>>Depto. Ing. Mecatrónica</option>
+    <option value="Depto. Vinculacion" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Vinculacion' ? 'selected' : ''; ?>>Depto. Vinculación</option>
+    <option value="Depto. Educación a Distancia" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Educación a Distancia' ? 'selected' : ''; ?>>Depto. Educación a Distancia</option>
+    <option value="Depto. Subdirección Admin" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Subdirección Admin' ? 'selected' : ''; ?>>Depto. Subdirección Admin</option>
+    <option value="Depto. Subdirección Planeación" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Subdirección Planeación' ? 'selected' : ''; ?>>Depto. Subdirección Planeación</option>
+    <option value="Depto. Subdirección Académica" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Subdirección Académica' ? 'selected' : ''; ?>>Depto. Subdirección Académica</option>
+    </select>
 
-            <label>Nombre del Evento (Campo Obligatorio):</label>
-            <input type="text" name="nombre_evento" maxlength="25" required>
+            <label>Nombre del Evento:<label>
+            <input type="text" name="nombre_evento" value="<?= $evento['nombre_evento'] ?? ''; ?>" maxlength="25" required>
 
-            <label>Fecha del Evento (Campo Obligatorio):</label>
-            <input type="date" id="fecha_evento" name="fecha_evento" required>
+            <label>Fecha del Evento:</label>
+                <input type="date" id="fecha_evento" name="fecha_evento" value="<?= $evento['fecha_evento'] ?? ''; ?>" required>
 
             <div class="checkbox-group">
-                <div>
-                <label>Hora de Inicio (Campo Obligatorio):</label>
-                <select name="hora_inicio" required>
-                    <option value="08:00 AM">08:00 AM</option>
-                    <option value="08:30 AM">08:30 AM</option>
-                    <option value="09:00 AM">09:00 AM</option>
-                    <option value="09:30 AM">09:30 AM</option>
-                    <option value="10:00 AM">10:00 AM</option>
-                    <option value="10:30 AM">10:30 AM</option>
-                    <option value="11:00 AM">11:00 AM</option>
-                    <option value="11:30 AM">11:30 AM</option>
-                    <option value="12:00 PM">12:00 PM</option>
-                    <option value="12:30 PM">12:30 PM</option>
-                    <option value="01:00 PM">01:00 PM</option>
-                    <option value="01:30 PM">01:30 PM</option>
-                </select>
-            </div>
-            <div>
-                <label>Hora de Fin (Campo Obligatorio):</label>
-                <select name="hora_fin" required>
-                    <option value="08:30 AM">08:30 AM</option>
-                    <option value="09:00 AM">09:00 AM</option>
-                    <option value="09:30 AM">09:30 AM</option>
-                    <option value="10:00 AM">10:00 AM</option>
-                    <option value="10:30 AM">10:30 AM</option>
-                    <option value="11:00 AM">11:00 AM</option>
-                    <option value="11:30 AM">11:30 AM</option>
-                    <option value="12:00 PM">12:00 PM</option>
-                    <option value="12:30 PM">12:30 PM</option>
-                    <option value="01:00 PM">01:00 PM</option>
-                    <option value="01:30 PM">01:30 PM</option>
-                    <option value="02:00 PM">02:00 PM</option>
-                </select>
-            </div>
-            </div>
+    <div>
+        <label>Hora de Inicio (Campo Obligatorio):</label>
+        <select name="hora_inicio" required>
+            <option value="08:00 AM" <?= $hora_inicio == "08:00 AM" ? 'selected' : ''; ?>>08:00 AM</option>
+            <option value="08:30 AM" <?= $hora_inicio == "08:30 AM" ? 'selected' : ''; ?>>08:30 AM</option>
+            <option value="09:00 AM" <?= $hora_inicio == "09:00 AM" ? 'selected' : ''; ?>>09:00 AM</option>
+            <option value="09:30 AM" <?= $hora_inicio == "09:30 AM" ? 'selected' : ''; ?>>09:30 AM</option>
+            <option value="10:00 AM" <?= $hora_inicio == "10:00 AM" ? 'selected' : ''; ?>>10:00 AM</option>
+            <option value="10:30 AM" <?= $hora_inicio == "10:30 AM" ? 'selected' : ''; ?>>10:30 AM</option>
+            <option value="11:00 AM" <?= $hora_inicio == "11:00 AM" ? 'selected' : ''; ?>>11:00 AM</option>
+            <option value="11:30 AM" <?= $hora_inicio == "11:30 AM" ? 'selected' : ''; ?>>11:30 AM</option>
+            <option value="12:00 PM" <?= $hora_inicio == "12:00 PM" ? 'selected' : ''; ?>>12:00 PM</option>
+            <option value="12:30 PM" <?= $hora_inicio == "12:30 PM" ? 'selected' : ''; ?>>12:30 PM</option>
+            <option value="01:00 PM" <?= $hora_inicio == "01:00 PM" ? 'selected' : ''; ?>>01:00 PM</option>
+            <option value="01:30 PM" <?= $hora_inicio == "01:30 PM" ? 'selected' : ''; ?>>01:30 PM</option>
+        </select>
+    </div>
 
-            <label>Lugar (Campo Obligatorio):</label>
+    <div>
+        <label>Hora de Fin (Campo Obligatorio):</label>
+        <select name="hora_fin" required>
+            <option value="08:30 AM" <?= $hora_fin == "08:30 AM" ? 'selected' : ''; ?>>08:30 AM</option>
+            <option value="09:00 AM" <?= $hora_fin == "09:00 AM" ? 'selected' : ''; ?>>09:00 AM</option>
+            <option value="09:30 AM" <?= $hora_fin == "09:30 AM" ? 'selected' : ''; ?>>09:30 AM</option>
+            <option value="10:00 AM" <?= $hora_fin == "10:00 AM" ? 'selected' : ''; ?>>10:00 AM</option>
+            <option value="10:30 AM" <?= $hora_fin == "10:30 AM" ? 'selected' : ''; ?>>10:30 AM</option>
+            <option value="11:00 AM" <?= $hora_fin == "11:00 AM" ? 'selected' : ''; ?>>11:00 AM</option>
+            <option value="11:30 AM" <?= $hora_fin == "11:30 AM" ? 'selected' : ''; ?>>11:30 AM</option>
+            <option value="12:00 PM" <?= $hora_fin == "12:00 PM" ? 'selected' : ''; ?>>12:00 PM</option>
+            <option value="12:30 PM" <?= $hora_fin == "12:30 PM" ? 'selected' : ''; ?>>12:30 PM</option>
+            <option value="01:00 PM" <?= $hora_fin == "01:00 PM" ? 'selected' : ''; ?>>01:00 PM</option>
+            <option value="01:30 PM" <?= $hora_fin == "01:30 PM" ? 'selected' : ''; ?>>01:30 PM</option>
+            <option value="02:00 PM" <?= $hora_fin == "02:00 PM" ? 'selected' : ''; ?>>02:00 PM</option>
+        </select>
+    </div>
+</div>
+
+            <label>Lugar:</label>
             <select name="lugar_evento" required>
-                <option value="Auditorio Segundo Rodriguez">Auditorio Ing. Segundo Rodriguez Alvarez</option>
-                <option value="Auditorio Tecnológico">Auditorio Tecnológico</option>
-                <option value="Auditorio Ing. Ricardo Peart">Auditorio Ing. Ricardo Peart</option>
-                <option value="Auditorio Vinculación">Auditorio Vinculación</option>
-                <option value="Plazoleta Media Luna">Plazoleta Media Luna</option>
-                <option value="Plazoleta Techada">Plazoleta Techada</option>
-                <option value="Canchas">Canchas</option>
-                <option value="Estadio">Estadio</option>
-                <option value="Alberca">Alberca</option>
-                <option value="Gimnasio">Gimnasio</option>
-                <option value="Jardines">Jardines</option>
+                <option value="Auditorio Segundo Rodriguez" <?= ($evento['lugar'] ?? '') == "Auditorio Segundo Rodriguez" ? 'selected' : ''; ?>>Auditorio Ing. Segundo Rodriguez Alvarez</option>
+                <option value="Auditorio Tecnológico" <?= ($evento['lugar'] ?? '') == "Auditorio Tecnológico" ? 'selected' : ''; ?>>Auditorio Tecnológico</option>
+                <option value="Auditorio Ing. Ricardo Peart" <?= ($evento['lugar'] ?? '') == "Auditorio Ing. Ricardo Peart" ? 'selected' : ''; ?>>Auditorio Ing. Ricardo Peart</option>
+                <option value="Auditorio Vinculación" <?= ($evento['lugar'] ?? '') == "Auditorio Vinculación" ? 'selected' : ''; ?>>Auditorio Vinculación</option>
+                <option value="Plazoleta Media Luna" <?= ($evento['lugar'] ?? '') == "Plazoleta Media Luna" ? 'selected' : ''; ?>>Plazoleta Media Luna</option>
+                <option value="Plazoleta Techada" <?= ($evento['lugar'] ?? '') == "Plazoleta Techada" ? 'selected' : ''; ?>>Plazoleta Techada</option>
+                <option value="Canchas" <?= ($evento['lugar'] ?? '') == "Canchas" ? 'selected' : ''; ?>>Canchas</option>
+                <option value="Estadio" <?= ($evento['lugar'] ?? '') == "Estadio" ? 'selected' : ''; ?>>Estadio</option>
+                <option value="Alberca" <?= ($evento['lugar'] ?? '') == "Alberca" ? 'selected' : ''; ?>>Alberca</option>
+                <option value="Gimnasio" <?= ($evento['lugar'] ?? '') == "Gimnasio" ? 'selected' : ''; ?>>Gimnasio</option>
+                <option value="Jardines" <?= ($evento['lugar'] ?? '') == "Jardines" ? 'selected' : ''; ?>>Jardines</option>
             </select>
 
             <label>Equipo de Audio:</label>
             <div class="checkbox-group">
-                <input type="radio" name="equipo_audio" value="Instal. Equipo Audio"> Instalación Equipo de Audio
-                <input type="radio" name="equipo_audio" value="Microfono Alámbrico"> Micrófono Alámbrico
-                <input type="radio" name="equipo_audio" value="Microfono Inalámbrico"> Micrófono Inalámbrico
-                <input type="radio" name="equipo_audio" value="Microfono Podium"> Micrófono para Podium
-                <input type="radio" name="equipo_audio" value="Cable laptop"> Cable para audio laptop
-                <input type="radio" name="equipo_audio" value="Micro Diadema"> Micro Diadema
-                <input type="radio" name="equipo_audio" value="Micro Solapa"> Micro Solapa
+                <input type="radio" name="equipo_audio" value="Instal. Equipo Audio" <?= ($evento['equipo_audio'] == "Instal. Equipo Audio") ? 'checked' : ''; ?>> Instalación Equipo de Audio
+                <input type="radio" name="equipo_audio" value="Microfono Alámbrico" <?= ($evento['equipo_audio'] == "Microfono Alámbrico") ? 'checked' : ''; ?>> Micrófono Alámbrico
+                <input type="radio" name="equipo_audio" value="Microfono Inalámbrico" <?= ($evento['equipo_audio'] == "Microfono Inalámbrico") ? 'checked' : ''; ?>> Microfono Inalámbrico
+                <input type="radio" name="equipo_audio" value="Microfono Podium" <?= ($evento['equipo_audio'] == "Microfono Podium") ? 'checked' : ''; ?>> Microfono para Podium
+                <input type="radio" name="equipo_audio" value="Cable laptop" <?= ($evento['equipo_audio'] == "Cable laptop") ? 'checked' : ''; ?>> Cable para audio laptop
+                <input type="radio" name="equipo_audio" value="Micro Diadema" <?= ($evento['equipo_audio'] == "Micro Diadema") ? 'checked' : ''; ?>> Micro Diadema
+                <input type="radio" name="equipo_audio" value="Micro Solapa" <?= ($evento['equipo_audio'] == "Micro Solapa") ? 'checked' : ''; ?>> Micro Solapa
             </div>
             <p>*NO SE CUENTA CON CABLES PARA MAC</p>
 
             <label>Difusión Interna:</label>
             <div class="checkbox-group">
-                <input type="radio" name="difusion_interna" value="Volante"> Volante
-                <input type="radio" name="difusion_interna" value="Oficios"> Oficios
-                <input type="radio" name="difusion_interna" value="Correo Electrónico"> Correo Electrónico
+                <input type="radio" name="difusion_interna" value="Volante" <?= ($evento['difusion_interna'] == "Volante") ? 'checked' : ''; ?>> Volante
+                <input type="radio" name="difusion_interna" value="Oficios" <?= ($evento['difusion_interna'] == "Oficios") ? 'checked' : ''; ?>> Oficios
+                <input type="radio" name="difusion_interna" value="Correo Electrónico" <?= ($evento['difusion_interna'] == "Correo Electrónico") ? 'checked' : ''; ?>> Correo Electrónico
             </div>
 
             <label>Difusión Externa:</label>
             <div class="checkbox-group">
-                <input type="radio" name="difusion_externa" value="Pagina Web"> Página Web
-                <input type="radio" name="difusion_externa" value="Redes Sociales"> Redes Sociales
-                <input type="radio" name="difusion_externa" value="Radio"> Radio
-                <input type="radio" name="difusion_externa" value="Prensa Escrita"> Prensa Escrita
-                <input type="radio" name="difusion_externa" value="TV"> TV
+                <input type="radio" name="difusion_externa" value="Pagina Web" <?= ($evento['difusion_externa'] == "Pagina Web") ? 'checked' : ''; ?>> Página Web
+                <input type="radio" name="difusion_externa" value="Redes Sociales" <?= ($evento['difusion_externa'] == "Redes Sociales") ? 'checked' : ''; ?>> Redes Sociales
+                <input type="radio" name="difusion_externa" value="Radio" <?= ($evento['difusion_externa'] == "Radio") ? 'checked' : ''; ?>> Radio
+                <input type="radio" name="difusion_externa" value="Prensa Escrita" <?= ($evento['difusion_externa'] == "Prensa Escrita") ? 'checked' : ''; ?>> Prensa Escrita
+                <input type="radio" name="difusion_externa" value="TV" <?= ($evento['difusion_externa'] == "TV") ? 'checked' : ''; ?>> TV
             </div>
 
-            <label>Fecha de Publicación (Campo Obligatorio):</label>
-            <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" required>
+            <label>Fecha de Publicación:</label>
+                <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" value="<?= $evento['difusion_fecha_inicio'] ?? ''; ?>" required>
 
-            <label>Fecha de término de Publicación (Campo Obligatorio):</label>
-            <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" required>
+                <label>Fecha de término de Publicación:</label>
+                <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" value="<?= $evento['difusion_fecha_termino'] ?? ''; ?>" required>
 
             <label>Diseño:</label>
             <div class="checkbox-group">
-                <input type="radio" name="diseno" value="Poster"> Póster
-                <input type="radio" name="diseno" value="Tríptico"> Tríptico
-                <input type="radio" name="diseno" value="Folleto"> Folleto
-                <input type="radio" name="diseno" value="Invitacion"> Invitación
-                <input type="radio" name="diseno" value="Lona"> Lona
+                 <input type="radio" name="diseno" value="Poster" <?= ($evento['diseno'] == 'Poster') ? 'checked' : ''; ?>> Póster
+                 <input type="radio" name="diseno" value="Tríptico" <?= ($evento['diseno'] == 'Tríptico') ? 'checked' : ''; ?>> Tríptico
+                 <input type="radio" name="diseno" value="Folleto" <?= ($evento['diseno'] == 'Folleto') ? 'checked' : ''; ?>> Folleto
+                 <input type="radio" name="diseno" value="Invitacion" <?= ($evento['diseno'] == 'Invitacion') ? 'checked' : ''; ?>> Invitación
+                 <input type="radio" name="diseno" value="Lona" <?= ($evento['diseno'] == 'Lona') ? 'checked' : ''; ?>> Lona
             </div>
 
             <label>Impresión y Otros:</label>
             <div class="checkbox-group">
-                <input type="radio" id="diploma" name="impresion" value="Diploma" onchange="validarImpresion()"> Diploma
-                <input type="radio" id="banner" name="impresion" value="Banner" onchange="validarImpresion()"> Banner digital
+                <input type="radio" id="diploma" name="impresion" value="Diploma" 
+                onchange="validarImpresion()" <?= ($evento['impresion'] == 'Diploma') ? 'checked' : ''; ?>> Diploma
+                <input type="radio" id="banner" name="impresion" value="Banner" 
+                onchange="validarImpresion()" <?= ($evento['impresion'] == 'Banner') ? 'checked' : ''; ?>> Banner digital
             </div>
-            <p>*Los diseños que no sean producidos en comunicación y difusión, deberán ser avalados por ese departamento, con el fin de que se ajusten a los lineamientos de identidad gráfica institucional, y para solicitar la producción de un diseño en este departamento se considerar 5 días hábiles de antelación a su posterior reproducción y/o difusión.</p>
 
             <label>Impresión/Copias:</label>
             <div class="checkbox-group">
-                <input type="number" id="num_copias" name="num_copias" min="1" max="5000" value="0" disabled oninput="validarLongitud(this)" maxlength="4">
+                <input type="number" id="num_copias" name="num_copias" min="1" max="5000" 
+                value="<?= $evento['num_copias'] ?? 0; ?>" disabled oninput="validarLongitud(this)" maxlength="4">
             </div>
             <p>*Anexar por CORREO ELECTRÓNICO los respectivos nombres de quienes recibirán reconocimiento.</p>
 
-            <label>Toma de Fotografías (Campo Obligatorio):</label>
+            <label>Toma de Fotografías:</label>
             <div class="checkbox-group">
-               <input type="radio" name="toma_fotografias" value="sí" required> Sí
-               <input type="radio" name="toma_fotografias" value="no" required> No
+                <input type="radio" name="toma_fotografias" value="1" <?= ($evento['toma_fotografias'] == 1) ? 'checked' : ''; ?> required> Sí
+                <input type="radio" name="toma_fotografias" value="0" <?= ($evento['toma_fotografias'] == 0) ? 'checked' : ''; ?> required> No
             </div>
 
-            <label>Maestro de Ceremonia (Campo Obligatorio):</label>
+            <label>Maestro/a de Ceremonias:</label>
             <div class="checkbox-group">
-                <input type="radio" name="maestro_ceremonia" value="sí" required> Sí
-                <input type="radio" name="maestro_ceremonia" value="no" required> No
+                <input type="radio" name="maestro_ceremonia" value="1" <?= ($evento['maestro_ceremonia'] == 1) ? 'checked' : ''; ?> required> Sí
+                <input type="radio" name="maestro_ceremonia" value="0" <?= ($evento['maestro_ceremonia'] == 0) ? 'checked' : ''; ?> required> No
             </div>
 
-            <label>Display (Campo Obligatorio):</label>
+            <label>Display:</label> 
             <div class="checkbox-group">
-               <input type="radio" name="display" value="Si" onclick="toggleDisplay()" required> Sí
-               <input type="radio" name="display" value="No" onclick="toggleDisplay()" required> No
-           </div>
+                <input type="radio" name="display" value="Si" onclick="toggleDisplay()" <?= ($evento['display'] ?? '') == 'Si' || ($evento['display'] ?? '') == '1' ? 'checked' : ''; ?> required> Sí
+                <input type="radio" name="display" value="No" onclick="toggleDisplay()" <?= ($evento['display'] ?? '') == 'No' || ($evento['display'] ?? '') == '0' ? 'checked' : ''; ?> required> No
+            </div>
 
             <label>Texto para Display:</label>
-                <input type="text" id="texto_display" name="texto_display" disabled>
+            <input type="text" id="texto_display" name="texto_display" value="<?= $evento['texto_display'] ?? ''; ?>">
 
-            <button type="submit">Enviar</button>
-                </form>
-            </div>
+            <button type="submit">Enviar modificación</button>
+        </form>
+    </div>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        let hoy = new Date().toISOString().split("T")[0]; // Obtener la fecha actual en formato YYYY-MM-DD
+
+        // Aplicar restricción de fecha mínima a los 3 campos
+        document.getElementById("fecha_evento").setAttribute("min", hoy);
+        document.getElementById("difusion_fecha_inicio").setAttribute("min", hoy);
+        document.getElementById("difusion_fecha_termino").setAttribute("min", hoy);
+            });
+        </script>
+
+       <script>
+        document.getElementById('fecha_elaboracion').value = new Date().toLocaleDateString('es-ES');
+        document.getElementById('solicitudForm').addEventListener('submit', function() {
+        document.getElementById('fecha_elaboracion').disabled = false;
+           });
+       </script>
+
+      <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        validarImpresion(); // Llamar a la función cuando la página cargue
+    });
+
+    function validarImpresion() {
+        let diploma = document.getElementById("diploma").checked;
+        let numCopias = document.getElementById("num_copias");
+
+        if (diploma) {
+            numCopias.disabled = false;
+        } else {
+            numCopias.disabled = true;
+            numCopias.value = ''; // Se limpia el campo en lugar de poner 0
+        }
+    }
+
+    function validarLongitud(input) {
+        // Eliminar ceros iniciales
+        input.value = input.value.replace(/^0+/, '');
+        
+        // Si el campo está vacío después de eliminar ceros, establecerlo en 0
+        if (input.value === '') {
+            input.value = 0;
+        }
+
+        // Limitar la longitud a 4 dígitos
+        if (input.value.length > 4) {
+            input.value = input.value.slice(0, 4);
+        }
+    }
+</script>
+
+        <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        toggleDisplay(); // Aplicar restricciones al cargar la página
+    });
+
+    function toggleDisplay() {
+        let textoDisplay = document.getElementById('texto_display');
+        let seleccion = document.querySelector('input[name="display"]:checked').value;
+
+        if (seleccion === "Si") {
+            textoDisplay.disabled = false;
+        } else {
+            textoDisplay.disabled = true;
+            textoDisplay.value = ""; // Limpiar campo si es "No"
+        }
+    }
+
+    function validarFormulario() {
+        let display = document.querySelector('input[name="display"]:checked').value;
+        let textoDisplay = document.getElementById('texto_display').value.trim();
+
+        if (display === "No" && textoDisplay !== "") {
+            alert("No puedes ingresar texto en el Display si está marcado como 'No'.");
+            return false; // Evita enviar el formulario
+        }
+        return true;
+    }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener("click", function () {
+            if (this.checked) {
+                this.wasChecked = !this.wasChecked;
+            }
+            if (!this.wasChecked) {
+                this.checked = false;
+            }
+        });
+    });
+});
+</script>
 
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -411,91 +438,15 @@ exit();
             border-radius: 5px;
             cursor: pointer;
             margin-top: 20px;
+            width: 100%; /* Hace que el botón ocupe todo el ancho */
+            display: block; /* Asegura que ocupe toda la línea */
+            text-align: center; /* Centra el texto dentro del botón */
         }
 
         button:hover {
             background: darkblue;
         }
     </style>
-
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-        radio.addEventListener("click", function () {
-            if (this.checked) {
-                this.wasChecked = !this.wasChecked;
-            }
-            if (!this.wasChecked) {
-                this.checked = false;
-            }
-        });
-    });
-});
-</script>
-
-        <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let hoy = new Date().toISOString().split("T")[0]; // Obtener la fecha actual en formato YYYY-MM-DD
-
-            // Aplicar restricción de fecha mínima a los 3 campos
-            document.getElementById("fecha_evento").setAttribute("min", hoy);
-            document.getElementById("difusion_fecha_inicio").setAttribute("min", hoy);
-            document.getElementById("difusion_fecha_termino").setAttribute("min", hoy);
-        });
-        </script>
-
-       <script>
-        document.getElementById('fecha_elaboracion').value = new Date().toLocaleDateString('es-ES');
-        document.getElementById('solicitudForm').addEventListener('submit', function() {
-        document.getElementById('fecha_elaboracion').disabled = false;
-           });
-       </script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        validarImpresion(); // Llamar a la función cuando la página cargue
-    });
-
-    function validarImpresion() {
-        let diploma = document.getElementById("diploma").checked;
-        let numCopias = document.getElementById("num_copias");
-
-        if (diploma) {
-            numCopias.disabled = false;
-        } else {
-            numCopias.disabled = true;
-            numCopias.value = 0;
-        }
-    }
-
-    function validarLongitud(input) {
-        // Eliminar ceros iniciales
-        input.value = input.value.replace(/^0+/, '');
-        
-        // Si el campo está vacío después de eliminar ceros, establecerlo en 0
-        if (input.value === '') {
-            input.value = 0;
-        }
-
-        // Limitar la longitud a 4 dígitos
-        if (input.value.length > 4) {
-            input.value = input.value.slice(0, 4);
-        }
-    }
-</script>
-
-<script>
-    function toggleDisplay() {
-    let textoDisplay = document.getElementById('texto_display');
-    let seleccion = document.querySelector('input[name="display"]:checked').value;
-    
-    if (seleccion === "Si") {
-        textoDisplay.disabled = false; // Permitir escribir
-    } else {
-        textoDisplay.disabled = true; // Bloquear escritura
-        textoDisplay.value = ""; // Limpiar campo si es "No"
-    }
-}
-</script>
+    </form>
 </body>
 </html>
