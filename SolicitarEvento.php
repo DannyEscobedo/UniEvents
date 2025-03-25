@@ -66,8 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Corregido: Siempre garantizar que el valor sea "Si" o "No"
    $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
-$maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
-$display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
+   $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
+   $display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
 
     $texto_display = $_POST["texto_display"] ?? null;
     $num_control = $_SESSION["usuario"]; // Asegurar que la variable tiene un valor antes de la consulta
@@ -141,26 +141,26 @@ exit();
 
             <label>Departamento Solicitante (Campo Obligatorio):</label>
             <select name="depto_solicitante" required>
-                <option value="Depto. Ciencias Basicas">Depto. Ciencias Básicas</option>
-                <option value="Depto. Industrial">Depto. Ing. Industrial</option>
-                <option value="Depto. Economico">Depto. Económico Admin.</option>
-                <option value="Depto. Mantenimiento Equipo">Depto. Mantenimineto de Equipo</option>
-                <option value="Depto. Centro Informacion">Depto. Centro de Info.</option>
-                <option value="Depto. Escolares">Depto. Servicios Escolares</option>
-                <option value="Depto. Planeacion">Depto. Planeacion y presup.</option>
-                <option value="Depto. RH">Depto. Recursos Humanos</option>
-                <option value="Depto. Calidad">Depto. de Calidad</option>
+                <option value="Depto. Ciencias Básicas">Depto. Ciencias Básicas</option>
+                <option value="Depto. Ing. Industrial">Depto. Ing. Industrial</option>
+                <option value="Depto. Económico Admin.">Depto. Económico Admin.</option>
+                <option value="Depto. Mantenimiento de Equipo">Depto. Mantenimiento de Equipo</option>
+                <option value="Depto. Centro de Información">Depto. Centro de Información</option>
+                <option value="Depto. Servicios Escolares">Depto. Servicios Escolares</option>
+                <option value="Depto. Planeación">Depto. Planeación</option>
+                <option value="Depto. Recursos Humanos">Depto. Recursos Humanos</option>
+                <option value="Depto. de Calidad">Depto. de Calidad</option>
                 <option value="Depto. Metal Metalurgia">Depto. Metal Metalurgia</option>
-                <option value="Depto. Recursos materiales y servicios">Depto. Rec. Materiales y Serv.</option>
-                <option value="Depto. Idiomas">Depto. Centro de Idiomas</option>
-                <option value="Depto. Electrica elect">Depto. Eléctrica Electrónica</option>
-                <option value="Depto. Sistemas">Depto. Ing. Sistemas</option>
-                <option value="Depto. Mecatrónica">Depto. Ing. Mecatrónica</option>
-                <option value="Depto. Vinculacion">Depto. Vinculación</option>
-                <option value="Depto. Distancia">Depto. Educación a Distancia</option>
-                <option value="Depto. Sub Admin">Subdirección Admin.</option>
-                <option value="Depto. Sub Planeacion">Subdirección de Planeación</option>
-                <option value="Depto. Sub Academica">Subdirección Académica</option>
+                <option value="Depto. Recursos materiales y servicios">Depto. Recursos materiales y servicios.</option>
+                <option value="Depto. Centro de Idiomas">Depto. Centro de Idiomas</option>
+                <option value="Depto. Eléctrica electrónica">Depto. Eléctrica electrónica</option>
+                <option value="Depto. Ing. Sistemas">Depto. Ing. Sistemas</option>
+                <option value="Depto. Ing Mecatrónica">Depto. Ing Mecatrónica</option>
+                <option value="Depto. Vinculacion">Depto. Vinculacion</option>
+                <option value="Depto. Educación a Distancia">Depto. Educación a Distancia</option>
+                <option value="Depto. Subdirección Admin">Depto. Subdirección Admin</option>
+                <option value="Depto. Subdirección Planeación">Depto. Subdirección Planeación</option>
+                <option value="Depto. Subdirección Académica">Depto. Subdirección Académica</option>
             </select>
 
             <label>Nombre del Evento (Campo Obligatorio):</label>
@@ -171,39 +171,39 @@ exit();
 
             <div class="checkbox-group">
                 <div>
-                    <label>Hora de Inicio (Campo Obligatorio):</label>
-                    <select name="hora_inicio" required>
-                        <option value="08:00">08:00 AM</option>
-                        <option value="08:30">08:30 AM</option>
-                        <option value="09:00">09:00 AM</option>
-                        <option value="09:30">09:30 AM</option>
-                        <option value="10:00">10:00 AM</option>
-                        <option value="10:30">10:30 AM</option>
-                        <option value="11:00">11:00 AM</option>
-                        <option value="11:30">11:30 AM</option>
-                        <option value="12:00">12:00 PM</option>
-                        <option value="12:30">12:30 PM</option>
-                        <option value="13:00">01:00 PM</option>
-                        <option value="13:30">01:30 PM</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Hora de Fin (Campo Obligatorio):</label>
-                    <select name="hora_fin" required>
-                        <option value="08:30">08:30 AM</option>
-                        <option value="09:00">09:00 AM</option>
-                        <option value="09:30">09:30 AM</option>
-                        <option value="10:00">10:00 AM</option>
-                        <option value="10:30">10:30 AM</option>
-                        <option value="11:00">11:00 AM</option>
-                        <option value="11:30">11:30 AM</option>
-                        <option value="12:00">12:00 PM</option>
-                        <option value="12:30">12:30 PM</option>
-                        <option value="13:00">01:00 PM</option>
-                        <option value="13:30">01:30 PM</option>
-                        <option value="14:00">02:00 PM</option>
-                    </select>
-                </div>
+                <label>Hora de Inicio (Campo Obligatorio):</label>
+                <select name="hora_inicio" required>
+                    <option value="08:00 AM">08:00 AM</option>
+                    <option value="08:30 AM">08:30 AM</option>
+                    <option value="09:00 AM">09:00 AM</option>
+                    <option value="09:30 AM">09:30 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="10:30 AM">10:30 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="11:30 AM">11:30 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="12:30 PM">12:30 PM</option>
+                    <option value="01:00 PM">01:00 PM</option>
+                    <option value="01:30 PM">01:30 PM</option>
+                </select>
+            </div>
+            <div>
+                <label>Hora de Fin (Campo Obligatorio):</label>
+                <select name="hora_fin" required>
+                    <option value="08:30 AM">08:30 AM</option>
+                    <option value="09:00 AM">09:00 AM</option>
+                    <option value="09:30 AM">09:30 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="10:30 AM">10:30 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="11:30 AM">11:30 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="12:30 PM">12:30 PM</option>
+                    <option value="01:00 PM">01:00 PM</option>
+                    <option value="01:30 PM">01:30 PM</option>
+                    <option value="02:00 PM">02:00 PM</option>
+                </select>
+            </div>
             </div>
 
             <label>Lugar (Campo Obligatorio):</label>
