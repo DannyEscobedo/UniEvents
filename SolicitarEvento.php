@@ -225,7 +225,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </select>
 
             <label>Nombre del Evento (Campo Obligatorio):</label>
-            <input type="text" name="nombre_evento" minlength="2" maxlength="25" required>
+            <input type="text" name="nombre_evento" minlength="3" maxlength="25" required>
 
             <label>Fecha del Evento (Campo Obligatorio):</label>
             <input type="date" id="fecha_evento" name="fecha_evento" required>
