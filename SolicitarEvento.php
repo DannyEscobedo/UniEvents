@@ -42,11 +42,6 @@ $evento_solicitante_nombre = $_SESSION["nombre"];
 
 // Verificar si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    // Ver los datos recibidos del formulario (para depuración)
-    echo "<pre>";
-    var_dump($_POST);
-    echo "</pre>";
 
     // Recibir los datos del formulario
     $depto_solicitante = $_POST["depto_solicitante"] ?? "No especificado";
@@ -65,13 +60,79 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $num_copias = isset($_POST["num_copias"]) && is_numeric($_POST["num_copias"]) ? (int)$_POST["num_copias"] : 0;
     
     // Corregido: Siempre garantizar que el valor sea "Si" o "No"
-   $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
-   $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
-   $display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
+    $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
+    $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
+    $display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
 
     $texto_display = $_POST["texto_display"] ?? null;
     $num_control = $_SESSION["usuario"]; // Asegurar que la variable tiene un valor antes de la consulta
     $evento_status = "Pendiente";
+
+    $errores = [];
+    // Validar fecha inicio difusion con fecha del evento
+    if ($difusion_fecha_inicio <= $fecha_evento) {
+        $errores[] = "El inicio de la difusión no puede ser primero o igual que la fecha del evento";
+    }
+    // Validar fecha término difusion con fecha del evento
+    if ($difusion_fecha_termino <= $fecha_evento) {
+        $errores[] = "El final de la difusión no puede ser primero que la fecha del evento";
+    }
+    // Validar rango de horas
+    if ($hora_inicio >= $hora_fin) {
+        $errores[] = "La hora de inicio debe ser menor que la hora de fin.";
+    }
+    
+    // Validar rango de fechas de difusión
+    if ($difusion_fecha_inicio > $difusion_fecha_termino) {
+        $errores[] = "La fecha de inicio de difusión no puede ser mayor que la fecha de término.";
+    }
+    
+    // Validar número de copias si opción imprimir está activada
+    if ($impresion === "si" && (!is_numeric($num_copias) || $num_copias <= 0)) {
+        $errores[] = "El número de copias debe ser un número válido mayor que 0.";
+    }
+    
+    // Validar texto display si opción display está activada
+    if ($display === "si" && empty($texto_display)) {
+        $errores[] = "Debe ingresar un texto para el display si está habilitado.";
+    }
+    
+    // Si hay errores, mostrar mensaje
+    if (!empty($errores)) {
+        // Mostrar los errores de manera ordenada
+        $errores_html = "<ul>";
+        foreach ($errores as $error) {
+            $errores_html .= "<li>" . htmlspecialchars($error) . "</li>";
+        }
+        $errores_html .= "</ul>";
+
+        // Mostramos los errores con estilo en la página
+        echo "
+        <style>
+            .error-message {
+                background-color: #f8d7da;
+                border-color: #f5c6cb;
+                color: #721c24;
+                padding: 10px;
+                border-radius: 5px;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+            .error-message ul {
+                margin: 0;
+                padding-left: 20px;
+            }
+            .error-message li {
+                list-style-type: square;
+            }
+        </style>
+        <div class='error-message'>
+            <h3>Se han encontrado los siguientes errores:</h3>
+            $errores_html
+        </div>";
+        exit;
+    }
 
     // Nombre del solicitante
     $evento_solicitante_nombre = isset($_SESSION["nombre"]) ? trim($_SESSION["nombre"]) : "Desconocido";
@@ -95,18 +156,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         );
 
        if ($stmt->execute()) {
-    $_SESSION["mensaje"] = "Solicitud enviada correctamente.";
-} else {
-    $_SESSION["mensaje"] = "Error al guardar la solicitud: " . $stmt->error;
-}
+            $_SESSION["mensaje"] = "Solicitud enviada correctamente.";
+        } else {
+            $_SESSION["mensaje"] = "Error al guardar la solicitud: " . $stmt->error;
+        }
 
-$stmt->close();
-$conn->close();
+        $stmt->close();
+        $conn->close();
 
-// Redirigir a MenuSolicitante.php después de procesar todo
-header("Location: MenuSolicitante.php");
-exit();
-}
+        // Redirigir a MenuSolicitante.php después de procesar todo
+        header("Location: MenuSolicitante.php");
+        exit();
+    }
 }
 ?>
 
@@ -164,7 +225,7 @@ exit();
             </select>
 
             <label>Nombre del Evento (Campo Obligatorio):</label>
-            <input type="text" name="nombre_evento" maxlength="25" required>
+            <input type="text" name="nombre_evento" minlength="2" maxlength="25" required>
 
             <label>Fecha del Evento (Campo Obligatorio):</label>
             <input type="date" id="fecha_evento" name="fecha_evento" required>
@@ -182,9 +243,6 @@ exit();
                     <option value="11:00 AM">11:00 AM</option>
                     <option value="11:30 AM">11:30 AM</option>
                     <option value="12:00 PM">12:00 PM</option>
-                    <option value="12:30 PM">12:30 PM</option>
-                    <option value="01:00 PM">01:00 PM</option>
-                    <option value="01:30 PM">01:30 PM</option>
                 </select>
             </div>
             <div>
@@ -199,9 +257,6 @@ exit();
                     <option value="11:30 AM">11:30 AM</option>
                     <option value="12:00 PM">12:00 PM</option>
                     <option value="12:30 PM">12:30 PM</option>
-                    <option value="01:00 PM">01:00 PM</option>
-                    <option value="01:30 PM">01:30 PM</option>
-                    <option value="02:00 PM">02:00 PM</option>
                 </select>
             </div>
             </div>
@@ -266,14 +321,14 @@ exit();
 
             <label>Impresión y Otros:</label>
             <div class="checkbox-group">
-                <input type="radio" id="diploma" name="impresion" value="Diploma" onchange="validarImpresion()"> Diploma
-                <input type="radio" id="banner" name="impresion" value="Banner" onchange="validarImpresion()"> Banner digital
+                <input type="checkbox" id="diploma" name="impresion" value="Diploma" onchange="validarImpresion(this)"> Diploma
+                <input type="checkbox" id="banner" name="impresion" value="Banner" onchange="validarImpresion(this)"> Banner digital
             </div>
             <p>*Los diseños que no sean producidos en comunicación y difusión, deberán ser avalados por ese departamento, con el fin de que se ajusten a los lineamientos de identidad gráfica institucional, y para solicitar la producción de un diseño en este departamento se considerar 5 días hábiles de antelación a su posterior reproducción y/o difusión.</p>
 
             <label>Impresión/Copias:</label>
             <div class="checkbox-group">
-                <input type="number" id="num_copias" name="num_copias" min="1" max="5000" value="0" disabled oninput="validarLongitud(this)" maxlength="4">
+                <input type="number" id="num_copias" name="num_copias" min="1" max="5000" disabled oninput="validarLongitud(this)" maxlength="4">
             </div>
             <p>*Anexar por CORREO ELECTRÓNICO los respectivos nombres de quienes recibirán reconocimiento.</p>
 
@@ -289,18 +344,18 @@ exit();
                 <input type="radio" name="maestro_ceremonia" value="no" required> No
             </div>
 
-            <label>Display (Campo Obligatorio):</label>
-            <div class="checkbox-group">
-               <input type="radio" name="display" value="Si" onclick="toggleDisplay()" required> Sí
-               <input type="radio" name="display" value="No" onclick="toggleDisplay()" required> No
-           </div>
+        <form>
+        <label>Display (Campo Obligatorio):</label>
+        <div class="checkbox-group">
+            <input type="checkbox" name="display" id="display_si" onclick="toggleDisplay('si')"> Sí
+            <input type="checkbox" name="display" id="display_no" onclick="toggleDisplay('no')"> No
+        </div>
 
-            <label>Texto para Display:</label>
-                <input type="text" id="texto_display" name="texto_display" disabled>
+        <label>Texto para Display:</label>
+        <input type="text" id="texto_display" name="texto_display" disabled>
 
-            <button type="submit">Enviar</button>
-                </form>
-            </div>
+        <button type="submit">Enviar</button>
+    </form>
 
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -452,32 +507,33 @@ document.addEventListener("DOMContentLoaded", function () {
        </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        validarImpresion(); // Llamar a la función cuando la página cargue
-    });
-
-    function validarImpresion() {
-        let diploma = document.getElementById("diploma").checked;
+    function validarImpresion(clickedCheckbox) {
+        let checkboxes = document.querySelectorAll('input[name="impresion"]');
         let numCopias = document.getElementById("num_copias");
 
-        if (diploma) {
+        // Desmarca el otro checkbox si uno es seleccionado
+        checkboxes.forEach(cb => {
+            if (cb !== clickedCheckbox) {
+                cb.checked = false;
+            }
+        });
+
+        // Si se selecciona "Diploma", se habilita el campo de copias
+        if (document.getElementById("diploma").checked) {
             numCopias.disabled = false;
         } else {
             numCopias.disabled = true;
-            numCopias.value = 0;
+            numCopias.value = ""; // 🔥 Limpia el campo si no es "Diploma"
         }
     }
 
     function validarLongitud(input) {
-        // Eliminar ceros iniciales
         input.value = input.value.replace(/^0+/, '');
-        
-        // Si el campo está vacío después de eliminar ceros, establecerlo en 0
+
         if (input.value === '') {
-            input.value = 0;
+            input.value = 1;
         }
 
-        // Limitar la longitud a 4 dígitos
         if (input.value.length > 4) {
             input.value = input.value.slice(0, 4);
         }
@@ -485,17 +541,55 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
-    function toggleDisplay() {
-    let textoDisplay = document.getElementById('texto_display');
-    let seleccion = document.querySelector('input[name="display"]:checked').value;
-    
-    if (seleccion === "Si") {
-        textoDisplay.disabled = false; // Permitir escribir
-    } else {
-        textoDisplay.disabled = true; // Bloquear escritura
-        textoDisplay.value = ""; // Limpiar campo si es "No"
+    // Esta función verifica si alguno de los checkboxes está marcado
+function validateDisplay() {
+    if (!document.getElementById('display_si').checked && !document.getElementById('display_no').checked) {
+        alert("El campo Display es obligatorio. Debe seleccionar 'Sí' o 'No'.");
+        return false;
     }
+    return true;
 }
+
+// Llamar a esta función cuando se envíe el formulario
+document.querySelector("form").onsubmit = function () {
+    return validateDisplay();
+};
+</script>
+
+<script>
+    function toggleDisplay(opcion) {
+        let textoDisplay = document.getElementById('texto_display');
+        let checkboxSi = document.getElementById('display_si');
+        let checkboxNo = document.getElementById('display_no');
+        
+        if (opcion === 'si') {
+            textoDisplay.disabled = false; // Habilitar campo de texto
+            checkboxNo.checked = false; // Desmarcar "No"
+        } 
+        
+        if (opcion === 'no') {
+            textoDisplay.disabled = true; // Deshabilitar campo de texto
+            textoDisplay.value = ""; // Limpiar campo de texto
+            checkboxSi.checked = false; // Desmarcar "Sí"
+        }
+
+        // Limpiar campo si "Sí" es desmarcado
+        if (!checkboxSi.checked && !checkboxNo.checked) {
+            textoDisplay.value = ""; // Limpiar el campo de texto si no se selecciona ninguna opción
+            textoDisplay.disabled = true; // Bloquear campo de texto
+        }
+    }
+
+    // Validar que no se envíe el formulario si el campo de texto está vacío cuando "Sí" está seleccionado
+    document.querySelector('form').addEventListener('submit', function(event) {
+        let textoDisplay = document.getElementById('texto_display');
+        let checkboxSi = document.getElementById('display_si');
+
+        if (checkboxSi.checked && textoDisplay.value.trim() === '') {
+            alert('Por favor, ingrese un texto para el display');
+            event.preventDefault(); // Evita que el formulario se envíe
+        }
+    });
 </script>
 </body>
 </html>
