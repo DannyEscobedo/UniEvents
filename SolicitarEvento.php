@@ -358,120 +358,122 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: "Poppins", sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff7f6;
-            color: black;
-        }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fff7f6;
+        color: black;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;  /* Mantengo el padding anterior */
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        /* Barra de navegación */
-        .navbar {
-            background-color: #25344f;
-            overflow: hidden;
-            padding: 7px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-        }
-        
-        .navbar a:hover {
-            background-color: darkblue;
-        }
+    /* Barra de navegación */
+    .navbar {
+        background-color: #25344f;
+        overflow: hidden;
+        padding: 7px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+    }
+    
+    .navbar a:hover {
+        background-color: darkblue;
+    }
 
-        .checkbox-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-        }
+    .checkbox-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;  /* Ligeramente mayor separación */
+    }
 
-        /* Reducir el tamaño de todos los checkboxes y radios */
-            input[type="checkbox"],
-            input[type="radio"] {
-            transform: scale(0.8); /* Ajusta el tamaño en un 80% del original */
-            width: 15px; /* Tamaño fijo */
-            height: 15px; /* Tamaño fijo */
-            margin-right: 5px; /* Espacio entre el input y el texto */
-        }
+    /* Reducir el tamaño de todos los checkboxes y radios */
+    input[type="checkbox"],
+    input[type="radio"] {
+        transform: scale(0.8); /* Ajusta el tamaño en un 80% del original */
+        width: 15px; /* Tamaño fijo */
+        height: 15px; /* Tamaño fijo */
+        margin-right: 5px; /* Espacio entre el input y el texto */
+    }
 
-        h2 {
-            text-align: center;
-            line-height: 19px;
-            color: darkblue;
-        }
+    h2 {
+        text-align: center;
+        line-height: 19px;
+        color: darkblue;
+    }
 
-        p {
-            text-align: justify;
-            line-height: 17px;
-            color: #1b5bbc;
-            font-size: 14px;
-            font-weight: bold;
-        }
+    p {
+        text-align: justify;
+        line-height: 17px;
+        color: #1b5bbc;
+        font-size: 14px;
+        font-weight: bold;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-        }
+    form {
+        display: flex;
+        flex-direction: column;
+    }
 
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-        }
+    label {
+        font-weight: bold;
+        margin-top: 12px;  /* Un pequeño margen superior */
+        margin-bottom: 6px;  /* Espacio sutil entre el label y el campo */
+    }
 
-        input, select {
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-        }
+    input, select {
+        padding: 8px;
+        margin-top: 6px;  /* Ligeramente más de espacio superior */
+        margin-bottom: 12px; /* Espacio entre los campos */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+    }
 
-        .checkbox-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            font-size: 14.5px;
-            text-align: left;
-        }
+    .checkbox-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px; /* Ligeramente mayor separación */
+        font-size: 14.5px;
+        text-align: left;
+    }
 
-          .radio-group {
-           display: flex;
-           align-items: center;
-           gap: 240px; /* Espacio entre los elementos */
-        }
+    .radio-group {
+        display: flex;
+        align-items: center;
+        gap: 160px; /* Un poco menos de espacio entre los radio buttons */
+    }
 
-        button {
-            background: #25344f;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
+    button {
+        background: #25344f;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px; /* Espacio razonable entre el botón y los campos */
+    }
 
-        button:hover {
-            background: darkblue;
-        }
-    </style>
+    button:hover {
+        background: darkblue;
+    }
+</style>
 
     <script>
 document.addEventListener("DOMContentLoaded", function () {
