@@ -525,7 +525,7 @@ document.addEventListener("DOMContentLoaded", function () {
             numCopias.disabled = false;
         } else {
             numCopias.disabled = true;
-            numCopias.value = ""; // 🔥 Limpia el campo si no es "Diploma"
+            numCopias.value = ""; // Limpia el campo si no es "Diploma"
         }
     }
 
