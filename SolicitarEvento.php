@@ -352,7 +352,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <label>Texto para Display:</label>
-        <input type="text" id="texto_display" name="texto_display" disabled>
+        <input type="text" id="texto_display" name="texto_display" minlength="3" maxlength="50" disabled>
 
         <button type="submit">Enviar</button>
     </form>
