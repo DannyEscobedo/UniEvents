@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     // Validar fecha término difusion con fecha del evento
     if ($difusion_fecha_termino <= $fecha_evento) {
-        $errores[] = "El final de la difusión no puede ser primero que la fecha del evento";
+        $errores[] = "El final de la difusión no puede ser primero o igual que la fecha del evento";
     }
     // Validar rango de horas
     if ($hora_inicio >= $hora_fin) {
