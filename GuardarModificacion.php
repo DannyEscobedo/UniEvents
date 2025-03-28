@@ -13,7 +13,7 @@ date_default_timezone_set('America/Mexico_City');
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["num_solicitud"])) {
     $num_solicitud = $_POST["num_solicitud"];
 
-    // Obtener la fecha_elaboracion actual de la BD
+    // 🔹 Obtener la fecha_elaboracion actual de la BD
     $sql_check = "SELECT fecha_elaboracion FROM solicitud WHERE num_solicitud = ?";
     $stmt_check = $conn->prepare($sql_check);
     $stmt_check->bind_param("i", $num_solicitud);
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["num_solicitud"])) {
         : $row["fecha_elaboracion"];
 
     // 🔹 Recibir los demás datos del formulario
-    $depto_solicitante = isset($_POST["depto_solicitante"]) ? trim($_POST["depto_solicitante"]) : "No especificado";
+    $depto_solicitante = isset($_POST["depto_solicitante"]) ? trim($_POST["depto_solicitante"]) : "Sin Departamento";
     $nombre_evento = isset($_POST["nombre_evento"]) ? trim($_POST["nombre_evento"]) : "Sin Nombre";
     $fecha_evento = $_POST["fecha_evento"];
     $hora_inicio = $_POST["hora_inicio"];
@@ -40,11 +40,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["num_solicitud"])) {
     $difusion_fecha_inicio = $_POST["difusion_fecha_inicio"] ?? null;
     $difusion_fecha_termino = $_POST["difusion_fecha_termino"] ?? null;
     $diseno = $_POST["diseno"] ?? "No";
-    $impresion = $_POST["impresion"] ?? "No";
+    $impresion = $_POST["impresion"] ?? "No seleccionado";
     $num_copias = $_POST["num_copias"] ?? 0;
-    $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "1") ? 1 : 0;
-    $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "1") ? 1 : 0;
-    $display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
+    $toma_fotografias = isset($_POST["toma_fotografias"]) ? $_POST["toma_fotografias"] : "No";
+    $maestro_ceremonia = isset($_POST["maestro_ceremonia"]) ? $_POST["maestro_ceremonia"] : "No";
+    $display = isset($_POST["display"]) ? $_POST["display"] :"No";
     $texto_display = $_POST["texto_display"] ?? null;
     $evento_solicitante_nombre = $_SESSION["nombre"] ?? "Desconocido";
 
