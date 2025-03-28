@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Corregido: Siempre garantizar que el valor sea "Si" o "No"
     $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
     $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
-    $display = (isset($_POST["display"]) && $_POST["display"] === "Si") ? 1 : 0;
+    $display = isset($_POST["display"]) ? 1 : 0;
 
     $texto_display = $_POST["texto_display"] ?? null;
     $num_control = $_SESSION["usuario"]; // Asegurar que la variable tiene un valor antes de la consulta
@@ -71,11 +71,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errores = [];
     // Validar fecha inicio difusion con fecha del evento
     if ($difusion_fecha_inicio <= $fecha_evento) {
-        $errores[] = "El inicio de la difusión no puede ser primero o igual que la fecha del evento";
+        $errores[] = "La fecha de publicación no puede ser primero o igual que la fecha del evento";
     }
     // Validar fecha término difusion con fecha del evento
     if ($difusion_fecha_termino <= $fecha_evento) {
-        $errores[] = "El final de la difusión no puede ser primero o igual que la fecha del evento";
+        $errores[] = "La fecha de publicación término no puede ser primero o igual que la fecha del evento";
     }
     // Validar rango de horas
     if ($hora_inicio >= $hora_fin) {
@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Validar rango de fechas de difusión
     if ($difusion_fecha_inicio > $difusion_fecha_termino) {
-        $errores[] = "La fecha de inicio de difusión no puede ser mayor que la fecha de término.";
+        $errores[] = "La fecha de publicación no puede ser después que la fecha de término.";
     }
     
     // Validar número de copias si opción imprimir está activada
@@ -347,8 +347,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form>
         <label>Display (Campo Obligatorio):</label>
         <div class="checkbox-group">
-            <input type="checkbox" name="display" id="display_si" onclick="toggleDisplay('si')"> Sí
-            <input type="checkbox" name="display" id="display_no" onclick="toggleDisplay('no')"> No
+              <input type="checkbox" name="display" id="display_si" onclick="toggleDisplay('si')"> Sí
+              <input type="checkbox" name="display" id="display_no" onclick="toggleDisplay('no')"> No
         </div>
 
         <label>Texto para Display:</label>
@@ -559,39 +559,37 @@ document.querySelector("form").onsubmit = function () {
 </script>
 
 <script>
-    function toggleDisplay(opcion) {
-        let textoDisplay = document.getElementById('texto_display');
-        let checkboxSi = document.getElementById('display_si');
-        let checkboxNo = document.getElementById('display_no');
-        
-        if (opcion === 'si') {
-            textoDisplay.disabled = false; // Habilitar campo de texto
-            checkboxNo.checked = false; // Desmarcar "No"
-        } 
-        
-        if (opcion === 'no') {
-            textoDisplay.disabled = true; // Deshabilitar campo de texto
-            textoDisplay.value = ""; // Limpiar campo de texto
-            checkboxSi.checked = false; // Desmarcar "Sí"
-        }
+ function toggleDisplay(opcion) {
+    let textoDisplay = document.getElementById('texto_display');
+    let checkboxSi = document.getElementById('display_si');
+    let checkboxNo = document.getElementById('display_no');
 
-        // Limpiar campo si "Sí" es desmarcado
-        if (!checkboxSi.checked && !checkboxNo.checked) {
-            textoDisplay.value = ""; // Limpiar el campo de texto si no se selecciona ninguna opción
-            textoDisplay.disabled = true; // Bloquear campo de texto
-        }
+    if (opcion === 'si') {
+        checkboxNo.checked = false; // Desmarcar "No"
+        textoDisplay.disabled = false; // Habilitar campo de texto
+    } else if (opcion === 'no') {
+        checkboxSi.checked = false; // Desmarcar "Sí"
+        textoDisplay.value = ""; // Limpiar el campo de texto
+        textoDisplay.disabled = true; // Bloquear el campo de texto
     }
 
-    // Validar que no se envíe el formulario si el campo de texto está vacío cuando "Sí" está seleccionado
-    document.querySelector('form').addEventListener('submit', function(event) {
-        let textoDisplay = document.getElementById('texto_display');
-        let checkboxSi = document.getElementById('display_si');
+    // Si se desmarca "Sí", también limpiar el campo y deshabilitarlo
+    if (!checkboxSi.checked) {
+        textoDisplay.value = "";
+        textoDisplay.disabled = true;
+    }
+}
 
-        if (checkboxSi.checked && textoDisplay.value.trim() === '') {
-            alert('Por favor, ingrese un texto para el display');
-            event.preventDefault(); // Evita que el formulario se envíe
-        }
-    });
+// Validar antes de enviar el formulario
+document.querySelector("form").addEventListener("submit", function (event) {
+    let checkboxSi = document.getElementById('display_si');
+    let textoDisplay = document.getElementById('texto_display');
+
+    if (checkboxSi.checked && textoDisplay.value.trim() === '') {
+        alert("Debe ingresar un texto para el display.");
+        event.preventDefault(); // Evita el envío del formulario
+    }
+});
 </script>
 </body>
 </html>
