@@ -29,7 +29,7 @@ if (!isset($_SESSION["usuario"])) {
         }
         /* Barra de navegación */
         .navbar {
-            background-color: darkblue;
+            background-color: #25344f;
             overflow: hidden;
             padding: 7px;
             display: flex;
@@ -42,7 +42,7 @@ if (!isset($_SESSION["usuario"])) {
             padding: 10px 20px;
         }
         .navbar a:hover {
-            background-color: mediumblue;
+            background-color: darkblue;
         }
         /* Contenedor principal */
         .container {
@@ -74,14 +74,14 @@ if (!isset($_SESSION["usuario"])) {
         <div>
             <a href="MenuAdministrador.php">Inicio</a>
             <a href="CalendarioDisponibilidad.php">Calendario de Disponibilidad</a>
-            <a href="GenerarPDF.php">Convertir a PDF</a>
+            <a href="RestablecerContraseña.php">Restablecer Contraseña</a>
         </div>
         <a href="CerrarSesion.php">Cerrar sesión</a>
     </div>
 
     <div class="container">
         <h1>¡Bienvenido de nuevo, Administrador!</h1>
-        <p>¿En qué trabajaremos en esta ocasión?</p>
+        <p>¿En qué trabajaremos por esta ocasión?</p>
     </div>
 </body>
 </html>
