@@ -45,19 +45,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errores = [];
 
         if (strlen($nueva_contraseña) < 8) {
-            $errores[] = "Debe tener al menos 8 caracteres.";
+            $errores[] = "- Debe tener al menos 8 caracteres.";
         }
         if (!preg_match("/[A-Z]/", $nueva_contraseña)) {
-            $errores[] = "Debe incluir al menos una letra mayúscula.";
+            $errores[] = "- Debe incluir al menos una letra mayúscula.";
         }
         if (!preg_match("/[a-z]/", $nueva_contraseña)) {
-            $errores[] = "Debe incluir al menos una letra minúscula.";
+            $errores[] = "- Debe incluir al menos una letra minúscula.";
         }
         if (!preg_match("/\d/", $nueva_contraseña)) {
-            $errores[] = "Debe incluir al menos un número.";
+            $errores[] = "- Debe incluir al menos un número.";
         }
         if (!preg_match("/[!@#$%^&*(),.?\":{}|<>]/", $nueva_contraseña)) {
-            $errores[] = "Debe incluir al menos un símbolo especial (!@#$%^&*)";
+            $errores[] = "- Debe incluir al menos un símbolo especial (!@#$%^&*)";
         }
 
         $contraseñasComunes = ["123456", "password", "qwerty", "admin123", "abcdef", "12345678", "111111"];
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_update->bind_param("ss", $nueva_contraseña, $num_control);  // Actualiza solo la contraseña
 
         if ($stmt_update->execute()) {
-            $mensaje = "Contraseña actualizada correctamente.";
+            $mensaje = "Contraseña actualizada correctamente. ¡Notifica al usuario su modificación por correo!";
             $num_control = "";  // Limpiar el campo de número de control
             $nueva_contraseña = "";  // Limpiar el campo de la nueva contraseña
         } else {
@@ -119,7 +119,7 @@ $conn->close();
         }
         h2 {
             color: darkblue;
-            margin-top: -20px;
+            margin-top: -30px;
             font-size: 28px;
         }
         /* Barra de navegación */
@@ -145,61 +145,80 @@ $conn->close();
             background-color: darkblue;
         }
         .input-container {
-            position: relative;
-            margin-bottom: 20px;
-            left: 0px;
-        }
-        .input-container input {
-            width: 100%;
-            padding: 15px;
-            padding-left: 40px; /* Espacio para el ícono */
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            font-size: 16.5px;
-            line-height: 1.5; /* Ajusta la altura del texto */
-        }
-        .input-container i {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 22px;
-            color: #555;
-        }
-        .eye-button {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 22px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #555;
-        }
-        .btn {
-            background-color: #001F87;
-            color: white;
-            padding: 15px;
-            width: 100%;
-            border: none;
-            border-radius: 10px;
-            font-size: 16.5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        .btn:hover {
-            background-color: #001060;
-        }
-        .error-message {
-            color: red;
-            font-size: 14px;
-            text-align: left;
-            margin-top: 5px;
-            min-height: 18px; /* Reserva espacio incluso si no hay error */
-            display: block;
-        }
+    position: relative;
+    margin-bottom: 20px; /* Mantiene espacio suficiente */
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos se alineen en columna */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+}
+
+.input-container input {
+    width: 100%;
+    padding: 15px;
+    padding-left: 45px; /* Espacio para el ícono */
+    padding-right: 40px; /* Espacio para el botón de ojo */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16.5px;
+    line-height: 1.5;
+}
+
+.input-container i {
+    position: absolute;
+    left: -30px; /* Asegura que el ícono del usuario/candado no empuje el input */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+    color: #555;
+}
+
+.eye-button {
+    position: absolute;
+    right: -35px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px; /* Reducido para estar más cerca del input */
+    text-align: left; /* Alineado a la izquierda */
+    display: block; /* Hace que ocupe toda la línea */
+    width: 100%; /* Asegura que ocupe todo el espacio */
+}
+.form-group {
+    margin-bottom: 20px; /* Espacio entre cada grupo de input y mensaje */
+}
+
+.btn {
+    background-color: #001F87;
+    color: white;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    font-size: 16.5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 20px; /* Asegura espacio suficiente respecto al mensaje de error */
+}
+
+.btn:hover {
+    background-color: #001060;
+}
+
+p{
+    margin-bottom: 50px;
+    padding-bottom: -15px;
+}
         .success-message {
             color: green;
             font-size: 16px;
@@ -248,15 +267,17 @@ $conn->close();
         </div>
 
             <div class="input-container">
-                <input type="password" id="nueva_contraseña" name="nueva_contraseña" placeholder="Nueva contraseña">
-                <button type="button" class="eye-button" onclick="togglePassword()">
-                    <i class='bx bx-show' id="toggle-password-icon"></i>
-                </button>
-                <?php if (!empty($errorContraseña)): ?>
-                    <p class="error-message"><?php echo $errorContraseña; ?></p>
-                <?php endif; ?>
-                <i class='bx bxs-lock'></i>
-            </div>
+    <input type="password" id="nueva_contraseña" name="nueva_contraseña" placeholder="Nueva contraseña">
+    <button type="button" class="eye-button" onclick="togglePassword()">
+        <i class='bx bx-show' id="toggle-password-icon"></i>
+    </button>
+    <i class='bx bxs-lock'></i>
+</div>
+
+<!-- Mensaje de error colocado fuera del input-container -->
+<?php if (!empty($errorContraseña)): ?>
+    <p class="error-message"><?php echo $errorContraseña; ?></p>
+<?php endif; ?>
 
             <?php if (!empty($mensaje)): ?>
                 <p class="success-message"><?php echo $mensaje; ?></p>
