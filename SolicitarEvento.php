@@ -364,7 +364,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         font-family: "Poppins", sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #fff7f6;
+        background: url('fondo admincontraseña.png') no-repeat center center fixed;
+        background-size: cover;
         color: black;
     }
 
