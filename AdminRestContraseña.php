@@ -239,16 +239,16 @@ $conn->close();
     <h2>Restablecer Contraseña</h2>
 
         <form method="POST" action="">
-            <div class="input-container">
-                <input type="text" name="num_control" placeholder="         Número de control" value="<?php echo htmlspecialchars($num_control); ?>" maxlength="8">
-                <?php if (!empty($errorNumControl)): ?>
-                    <p class="error-message"><?php echo $errorNumControl; ?></p>
-                <?php endif; ?>
-                <i class='bx bxs-user'></i>
-            </div>
+          <div class="input-container">
+        <input type="text" name="num_control" placeholder="Número de control" value="<?php echo htmlspecialchars($num_control); ?>" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+        <?php if (!empty($errorNumControl)): ?>
+            <p class="error-message"><?php echo $errorNumControl; ?></p>
+        <?php endif; ?>
+        <i class='bx bxs-user'></i>
+        </div>
 
             <div class="input-container">
-                <input type="password" id="nueva_contraseña" name="nueva_contraseña" placeholder="         Nueva contraseña">
+                <input type="password" id="nueva_contraseña" name="nueva_contraseña" placeholder="Nueva contraseña">
                 <button type="button" class="eye-button" onclick="togglePassword()">
                     <i class='bx bx-show' id="toggle-password-icon"></i>
                 </button>
