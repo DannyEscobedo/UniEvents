@@ -249,9 +249,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <?= ($evento['display'] ?? '') == 'No' || ($evento['display'] ?? '') == '0' ? 'checked' : ''; ?>> No
             </div>
 
-            <label>Texto para Display:</label>
-            <input type="text" id="texto_display" name="texto_display" value="<?= $evento['texto_display'] ?? ''; ?>" minlength="3" maxlength="50" 
-            <?= ($evento['display'] ?? '') == 'Si' ? '' : 'disabled'; ?>>
+    <label>Texto para Display:</label>
+<input type="text" id="texto_display" name="texto_display" 
+    value="<?= $evento['texto_display'] ?? ''; ?>" 
+    minlength="3" maxlength="50">
 
             <button type="submit">Enviar modificación</button>
         </form>
@@ -449,11 +450,17 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
-    function toggleDisplay(clickedCheckbox) {
-        let textoDisplay = document.getElementById('texto_display');
-        let checkboxSi = document.getElementById('display_si');
-        let checkboxNo = document.getElementById('display_no');
+    document.addEventListener("DOMContentLoaded", function () {
+    let textoDisplay = document.getElementById('texto_display');
+    let checkboxSi = document.getElementById('display_si');
+    let checkboxNo = document.getElementById('display_no');
 
+    // ✅ Si "Sí" ya estaba seleccionado, asegurarse de que el campo sea editable
+    if (checkboxSi.checked) {
+        textoDisplay.disabled = false;
+    }
+
+    function toggleDisplay(clickedCheckbox) {
         // Si se selecciona "Sí", habilita el campo de texto y desmarca "No"
         if (clickedCheckbox.id === 'display_si') {
             textoDisplay.disabled = false;
@@ -475,9 +482,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.querySelector('form').addEventListener('submit', function(event) {
-        let textoDisplay = document.getElementById('texto_display');
-        let checkboxSi = document.getElementById('display_si');
-
         if (!validateDisplay()) {
             event.preventDefault(); // Evita el envío si no hay selección
         }
@@ -487,6 +491,11 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault(); // Evita que el formulario se envíe
         }
     });
+
+    // Asigna eventos a los checkboxes
+    checkboxSi.addEventListener("click", function () { toggleDisplay(this); });
+    checkboxNo.addEventListener("click", function () { toggleDisplay(this); });
+});
 </script>
 
        <style>
