@@ -544,6 +544,20 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const formulario = document.getElementById("solicitudForm"); // Reemplaza con el ID de tu formulario
+    const inputNombreEvento = document.querySelector("input[name='nombre_evento']");
+
+    formulario.addEventListener("submit", function (event) {
+        if (!inputNombreEvento.value.trim()) {
+            alert("El nombre del evento no puede estar vacío o contener solo espacios.");
+            event.preventDefault(); // Detiene el envío del formulario
+        }
+    });
+});
+</script>
+
+<script>
     // Esta función verifica si alguno de los checkboxes está marcado
 function validateDisplay() {
     if (!document.getElementById('display_si').checked && !document.getElementById('display_no').checked) {
