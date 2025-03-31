@@ -322,6 +322,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+    const formulario = document.getElementById("solicitudForm"); // Asegúrate de usar el ID correcto
+    const inputNombreEvento = document.querySelector("input[name='nombre_evento']");
+
+    // Evita que el usuario ingrese solo espacios en tiempo real
+    inputNombreEvento.addEventListener("input", function () {
+        this.value = this.value.replace(/^\s+/g, ""); // Elimina espacios al inicio
+    });
+
+    formulario.addEventListener("submit", function (event) {
+        if (!inputNombreEvento.value.trim()) {
+            alert("El nombre del evento no puede estar vacío o contener solo espacios.");
+            event.preventDefault(); // Detiene el envío del formulario
+        }
+    });
+});
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
         validarImpresion(document.querySelector('input[name="impresion"]:checked'));
     });
 
