@@ -250,9 +250,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
     <label>Texto para Display:</label>
-<input type="text" id="texto_display" name="texto_display" 
-    value="<?= $evento['texto_display'] ?? ''; ?>" 
-    minlength="3" maxlength="50">
+    <input type="text" id="texto_display" name="texto_display" 
+           value="<?= $evento['texto_display'] ?? ''; ?>" 
+           minlength="3" maxlength="50" disabled>
 
             <button type="submit">Enviar modificación</button>
         </form>
@@ -341,10 +341,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        validarImpresion(document.querySelector('input[name="impresion"]:checked'));
-    });
-
     function validarImpresion(clickedCheckbox) {
         let checkboxes = document.querySelectorAll('input[name="impresion"]');
         let numCopias = document.getElementById("num_copias");
@@ -356,30 +352,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         });
 
-        // Habilita el campo si "Diploma" está seleccionado
+        // Si se selecciona "Diploma", se habilita el campo de copias y lo establece en 0
         if (document.getElementById("diploma").checked) {
             numCopias.disabled = false;
+            numCopias.value = 0; // Asegura que inicie en 0 al activarlo
         } else {
             numCopias.disabled = true;
-            numCopias.value = ""; // Limpia el campo si no es "Diploma"
-        }
-
-        // Si "Banner" está seleccionado, bloquea y limpia el campo de copias
-        if (document.getElementById("banner").checked) {
-            numCopias.disabled = true;
-            numCopias.value = ""; // Limpia el campo si es "Banner"
+            numCopias.value = 0; // Siempre vuelve a 0 al deshabilitarlo
         }
     }
 
     function validarLongitud(input) {
         input.value = input.value.replace(/^0+/, ''); // Elimina ceros al inicio
 
-        if (input.value === '' || input.value < 1) {
-            input.value = 1; // Valor mínimo 1
+        if (input.value === '' || isNaN(input.value)) {
+            input.value = 0; // Si está vacío, vuelve a 0 en lugar de 1
+        }
+
+        if (input.value < 1) {
+            input.value = 1; // No permite valores menores a 1
         }
 
         if (input.value.length > 4) {
-            input.value = input.value.slice(0, 4); // Máximo 4 dígitos
+            input.value = input.value.slice(0, 4);
         }
     }
 </script>
@@ -438,6 +433,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 </script>
 
+
+<script>
+    function toggleDisplay(opcion) {
+        let si = document.getElementById("display_si");
+        let no = document.getElementById("display_no");
+
+        if (opcion === "si") {
+            no.checked = false; // Desmarca "No" si se selecciona "Sí"
+        } else if (opcion === "no") {
+            si.checked = false; // Desmarca "Sí" si se selecciona "No"
+        }
+    }
+
+    function validateDisplay() {
+        let si = document.getElementById("display_si").checked;
+        let no = document.getElementById("display_no").checked;
+
+        if (!si && !no) {
+            alert("El campo Display es obligatorio. Debe seleccionar 'Sí' o 'No'.");
+            return false;
+        }
+        return true;
+    }
+
+    document.querySelector("form").onsubmit = function () {
+        return validateDisplay();
+    };
+</script>
+
 <script>
     function validateDisplay() {
         let checkboxSi = document.getElementById('display_si');
@@ -451,51 +475,54 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-    let textoDisplay = document.getElementById('texto_display');
-    let checkboxSi = document.getElementById('display_si');
-    let checkboxNo = document.getElementById('display_no');
+        let textoDisplay = document.getElementById('texto_display');
+        let checkboxSi = document.getElementById('display_si');
+        let checkboxNo = document.getElementById('display_no');
 
-    // ✅ Si "Sí" ya estaba seleccionado, asegurarse de que el campo sea editable
-    if (checkboxSi.checked) {
-        textoDisplay.disabled = false;
-    }
-
-    function toggleDisplay(clickedCheckbox) {
-        // Si se selecciona "Sí", habilita el campo de texto y desmarca "No"
-        if (clickedCheckbox.id === 'display_si') {
+        // Si la opción "Sí" o "No" está seleccionada al cargar la página
+        if (<?= json_encode($evento['display'] ?? '') ?> === 'Si') {
+            checkboxSi.checked = true;
             textoDisplay.disabled = false;
-            checkboxNo.checked = false;
-        }
-
-        // Si se selecciona "No", deshabilita el campo de texto, lo limpia y desmarca "Sí"
-        if (clickedCheckbox.id === 'display_no') {
+        } else if (<?= json_encode($evento['display'] ?? '') ?> === 'No') {
+            checkboxNo.checked = true;
             textoDisplay.disabled = true;
-            textoDisplay.value = "";
-            checkboxSi.checked = false;
+            textoDisplay.value = ''; // Limpiar el texto si "No" está seleccionado
         }
 
-        // Si no hay ninguna opción seleccionada, limpiar y deshabilitar el campo de texto
-        if (!checkboxSi.checked && !checkboxNo.checked) {
-            textoDisplay.value = "";
-            textoDisplay.disabled = true;
-        }
-    }
+        // Función para manejar el cambio entre "Sí" y "No"
+        function toggleDisplay(clickedCheckbox) {
+            if (clickedCheckbox.id === 'display_si') {
+                textoDisplay.disabled = false;
+                textoDisplay.value = ''; // Limpiar el campo cuando se selecciona "Sí"
+                checkboxNo.checked = false; // Desmarcar "No"
+            } else if (clickedCheckbox.id === 'display_no') {
+                textoDisplay.disabled = true;
+                textoDisplay.value = ''; // Limpiar el campo de texto
+                checkboxSi.checked = false; // Desmarcar "Sí"
+            }
 
-    document.querySelector('form').addEventListener('submit', function(event) {
-        if (!validateDisplay()) {
-            event.preventDefault(); // Evita el envío si no hay selección
+            // Si no hay opción seleccionada, bloquear el campo de texto
+            if (!checkboxSi.checked && !checkboxNo.checked) {
+                textoDisplay.value = ''; // Limpiar el texto
+                textoDisplay.disabled = true; // Bloquear el campo
+            }
         }
 
-        if (checkboxSi.checked && textoDisplay.value.trim() === '') {
-            alert('Por favor, ingrese un texto para el display.');
-            event.preventDefault(); // Evita que el formulario se envíe
-        }
+        // Añadir evento de cambio en los checkboxes
+        checkboxSi.addEventListener("click", function() { toggleDisplay(checkboxSi); });
+        checkboxNo.addEventListener("click", function() { toggleDisplay(checkboxNo); });
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            if (!validateDisplay()) {
+                event.preventDefault(); // Evita el envío si no hay selección
+            }
+
+            if (checkboxSi.checked && textoDisplay.value.trim() === '') {
+                alert('Por favor, ingrese un texto para el display.');
+                event.preventDefault(); // Evita que el formulario se envíe
+            }
+        });
     });
-
-    // Asigna eventos a los checkboxes
-    checkboxSi.addEventListener("click", function () { toggleDisplay(this); });
-    checkboxNo.addEventListener("click", function () { toggleDisplay(this); });
-});
 </script>
 
        <style>
