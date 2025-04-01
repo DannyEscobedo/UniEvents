@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Corregido: Siempre garantizar que el valor sea "Si" o "No"
     $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
     $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
-    $display = isset($_POST["display"]) ? 1 : 0;
+   $display = isset($_POST["display"]) ? intval($_POST["display"]) : 0;
 
     $texto_display = $_POST["texto_display"] ?? null;
     $num_control = $_SESSION["usuario"]; // Asegurar que la variable tiene un valor antes de la consulta
@@ -308,18 +308,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="radio" name="maestro_ceremonia" value="no" required> No
             </div>
 
-        <form>
-        <label>Display (Campo Obligatorio):</label>
-        <div class="checkbox-group">
-              <input type="checkbox" name="display" id="display_si" onclick="toggleDisplay('si')"> Sí
-              <input type="checkbox" name="display" id="display_no" onclick="toggleDisplay('no')"> No
-        </div>
+       <form method="POST">
+    <label>Display (Campo Obligatorio):</label>
+    <div class="checkbox-group">
+        <input type="checkbox" name="display" id="display_si" value="Si" onclick="toggleDisplay('si')"> 
+        <label for="display_si">Sí</label>
 
-        <label>Texto para Display:</label>
-        <input type="text" id="texto_display" name="texto_display" minlength="3" maxlength="50" disabled>
+        <input type="checkbox" name="display" id="display_no" value="No" onclick="toggleDisplay('no')"> 
+        <label for="display_no">No</label>
+    </div>
 
-        <button type="submit">Enviar</button>
-    </form>
+    <label>Texto para Display:</label>
+    <input type="text" id="texto_display" name="texto_display" minlength="3" maxlength="50" disabled>
+
+    <button type="submit">Enviar</button>
+</form>
 
         <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -603,23 +606,46 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <script>
-    // Esta función verifica si alguno de los checkboxes está marcado
-function validateDisplay() {
-    if (!document.getElementById('display_si').checked && !document.getElementById('display_no').checked) {
-        alert("El campo Display es obligatorio. Debe seleccionar 'Sí' o 'No'.");
-        return false;
+function toggleCheckbox(clickedCheckbox, otherCheckboxId) {
+    let otherCheckbox = document.getElementById(otherCheckboxId);
+    
+    if (clickedCheckbox.checked) {
+        otherCheckbox.checked = false;
     }
-    return true;
+}
+</script>
+
+<script>
+function toggleDisplay(clickedCheckbox, otherCheckboxId) {
+    let otherCheckbox = document.getElementById(otherCheckboxId);
+    let hiddenInput = document.getElementById("display_hidden");
+
+    if (clickedCheckbox.checked) {
+        otherCheckbox.checked = false;
+        hiddenInput.value = clickedCheckbox.value; // Guarda el valor correcto (1 o 0)
+    } else {
+        hiddenInput.value = ""; // Si se deselecciona, no se enviará valor
+    }
 }
 
-// Llamar a esta función cuando se envíe el formulario
-document.querySelector("form").onsubmit = function () {
-    return validateDisplay();
+// Validar antes de enviar el formulario
+document.querySelector("form").onsubmit = function (event) {
+    let checkboxSi = document.getElementById("display_si");
+    let checkboxNo = document.getElementById("display_no");
+    let hiddenInput = document.getElementById("display_hidden");
+
+    if (!checkboxSi.checked && !checkboxNo.checked) {
+        alert("El campo Display es obligatorio. Debe seleccionar 'Sí' o 'No'.");
+        event.preventDefault();
+        return false;
+    }
+
+    return true;
 };
 </script>
 
 <script>
- function toggleDisplay(opcion) {
+function toggleDisplay(opcion) {
     let textoDisplay = document.getElementById('texto_display');
     let checkboxSi = document.getElementById('display_si');
     let checkboxNo = document.getElementById('display_no');
@@ -627,6 +653,7 @@ document.querySelector("form").onsubmit = function () {
     if (opcion === 'si') {
         checkboxNo.checked = false; // Desmarcar "No"
         textoDisplay.disabled = false; // Habilitar campo de texto
+        textoDisplay.focus(); // Enfocar en el campo de texto si es "Sí"
     } else if (opcion === 'no') {
         checkboxSi.checked = false; // Desmarcar "Sí"
         textoDisplay.value = ""; // Limpiar el campo de texto
@@ -645,6 +672,7 @@ document.querySelector("form").addEventListener("submit", function (event) {
     let checkboxSi = document.getElementById('display_si');
     let textoDisplay = document.getElementById('texto_display');
 
+    // Solo mostrar mensaje de error si se seleccionó "Sí" y el campo está vacío
     if (checkboxSi.checked && textoDisplay.value.trim() === '') {
         alert("Debe ingresar un texto para el display.");
         event.preventDefault(); // Evita el envío del formulario
