@@ -98,133 +98,140 @@ $conn->close();
     <title>Restablecer Contraseña</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-        body {
-            font-family: "Poppins", sans-serif;
-            background: url('fondo admincontraseña.png') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;    
-        }
-        .container {
-            background: white;
-            padding: 90px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            width: 400px;
-        }
-        h2 {
-            color: darkblue;
-            margin-top: -30px;
-            font-size: 28px;
-        }
-        /* Barra de navegación */
-        .navbar {
-            background-color: #25344f;
-            overflow: hidden;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%; /* Ocupar todo el ancho */
-            position: fixed; /* Mantener fija en la parte superior */
-            top: 0;
-            left: 0;
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-        }
-        .navbar a:hover {
-            background-color: darkblue;
-        }
-        .input-container {
-    position: relative;
-    margin-bottom: 20px; /* Mantiene espacio suficiente */
-    text-align: center;
-    display: flex;
-    flex-direction: column; /* Asegura que los elementos se alineen en columna */
-    align-items: center; /* Centra verticalmente */
-    justify-content: center; /* Centra horizontalmente */
-}
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+    body {
+        font-family: "Poppins", sans-serif;
+        background: url('fondo admincontraseña.png') no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        background: white;
+        padding: 90px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        width: 400px;
+    }
+    h2 {
+        color: darkblue;
+        margin-top: -30px;
+        font-size: 28px;
+    }
+    /* Barra de navegación */
+    .navbar {
+        background-color: #25344f;
+        overflow: hidden;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%; /* Ocupar todo el ancho */
+        position: fixed; /* Mantener fija en la parte superior */
+        top: 0;
+        left: 0;
+        z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    }
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+    }
+    .navbar a:hover {
+        background-color: darkblue;
+    }
 
-.input-container input {
-    width: 100%;
-    padding: 15px;
-    padding-left: 45px; /* Espacio para el ícono */
-    padding-right: 40px; /* Espacio para el botón de ojo */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 16.5px;
-    line-height: 1.5;
-}
+    .input-container {
+        position: relative;
+        margin-bottom: 30px; /* Mantiene espacio suficiente */
+        text-align: center;
+        display: flex;
+        flex-direction: column; /* Asegura que los elementos se alineen en columna */
+        align-items: center; /* Centra verticalmente */
+        justify-content: center; /* Centra horizontalmente */
+    }
 
-.input-container i {
-    position: absolute;
-    left: -30px; /* Asegura que el ícono del usuario/candado no empuje el input */
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 22px;
-    color: #555;
-}
+    .input-container input {
+        width: 100%;
+        padding: 15px;
+        padding-left: 45px; /* Espacio para el ícono */
+        padding-right: 40px; /* Espacio para el botón de ojo */
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 16.5px;
+        line-height: 1.5;
+        margin-bottom: 5px; /* Evita que los mensajes se solapen con el input */
+    }
 
-.eye-button {
-    position: absolute;
-    right: -35px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 22px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #555;
-}
+    .input-container i {
+        position: absolute;
+        left: -30px; /* Ajustar para que el ícono no quede muy al borde */
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 22px;
+        color: #555;
+    }
 
-.error-message {
+    .eye-button {
+        position: absolute;
+        right: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 22px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #555;
+    }
+
+    .error-message {
     color: red;
-    font-size: 14px;
-    margin-top: 5px; /* Reducido para estar más cerca del input */
+    font-size: 13.5px; /* Reducir el tamaño del texto de error */
+    margin-top: 5px; /* Reduce el margen entre el input y el mensaje de error */
+    margin-bottom: -18px; /* Eliminar el margen inferior para que no afecte la posición del input */
     text-align: left; /* Alineado a la izquierda */
     display: block; /* Hace que ocupe toda la línea */
     width: 100%; /* Asegura que ocupe todo el espacio */
-}
-.form-group {
-    margin-bottom: 20px; /* Espacio entre cada grupo de input y mensaje */
+    position: relative; /* Permite el control absoluto en el layout */
 }
 
-.btn {
-    background-color: #001F87;
-    color: white;
-    padding: 15px;
-    width: 100%;
-    border: none;
-    border-radius: 10px;
-    font-size: 16.5px;
-    cursor: pointer;
-    transition: background 0.3s;
-    margin-top: 20px; /* Asegura espacio suficiente respecto al mensaje de error */
-}
+    .form-group {
+        margin-bottom: 15px; /* Reducir el espacio entre el grupo de inputs */
+    }
 
-.btn:hover {
-    background-color: #001060;
-}
+    .btn {
+        background-color: #001F87;
+        color: white;
+        padding: 15px;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        font-size: 16.5px;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 30px;
+    }
 
-p{
-    margin-bottom: 50px;
-    padding-bottom: -15px;
-}
-        .success-message {
-            color: green;
-            font-size: 16px;
-            text-align: center;
-        }
-    </style>
+    .btn:hover {
+        background-color: #001060;
+    }
+
+    p {
+        margin-bottom: 50px;
+        padding-bottom: -15px;
+    }
+
+    .success-message {
+        color: green;
+        font-size: 16px;
+        text-align: center;
+        margin-bottom: -5px;
+    }
+</style>
     <script>
         function togglePassword() {
             let passwordField = document.getElementById("nueva_contraseña");
@@ -260,14 +267,14 @@ p{
         <form method="POST" action="">
           <div class="input-container">
         <input type="text" name="num_control" placeholder="Número de control" value="<?php echo htmlspecialchars($num_control); ?>" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+        <i class='bx bxs-user'></i>
         <?php if (!empty($errorNumControl)): ?>
             <p class="error-message"><?php echo $errorNumControl; ?></p>
         <?php endif; ?>
-        <i class='bx bxs-user'></i>
         </div>
 
             <div class="input-container">
-    <input type="password" id="nueva_contraseña" name="nueva_contraseña" placeholder="Nueva contraseña">
+    <input type="password" id="nueva_contraseña" name="nueva_contraseña" minlength="8" maxlength="16" placeholder="Nueva contraseña">
     <button type="button" class="eye-button" onclick="togglePassword()">
         <i class='bx bx-show' id="toggle-password-icon"></i>
     </button>
