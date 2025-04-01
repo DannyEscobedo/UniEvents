@@ -96,43 +96,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($display === "si" && empty($texto_display)) {
         $errores[] = "Debe ingresar un texto para el display si está habilitado.";
     }
-    
-    // Si hay errores, mostrar mensaje
-    if (!empty($errores)) {
-        // Mostrar los errores de manera ordenada
-        $errores_html = "<ul>";
-        foreach ($errores as $error) {
-            $errores_html .= "<li>" . htmlspecialchars($error) . "</li>";
-        }
-        $errores_html .= "</ul>";
-
-        // Mostramos los errores con estilo en la página
-        echo "
-        <style>
-            .error-message {
-                background-color: #f8d7da;
-                border-color: #f5c6cb;
-                color: #721c24;
-                padding: 10px;
-                border-radius: 5px;
-                font-family: Arial, sans-serif;
-                font-size: 16px;
-                margin-bottom: 20px;
-            }
-            .error-message ul {
-                margin: 0;
-                padding-left: 20px;
-            }
-            .error-message li {
-                list-style-type: square;
-            }
-        </style>
-        <div class='error-message'>
-            <h3>Se han encontrado los siguientes errores:</h3>
-            $errores_html
-        </div>";
-        exit;
-    }
 
     // Nombre del solicitante
     $evento_solicitante_nombre = isset($_SESSION["nombre"]) ? trim($_SESSION["nombre"]) : "Desconocido";
@@ -231,35 +194,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="date" id="fecha_evento" name="fecha_evento" required>
 
             <div class="checkbox-group">
-                <div>
-                <label>Hora de Inicio (Campo Obligatorio):</label>
-                <select name="hora_inicio" required>
-                    <option value="08:00 AM">08:00 AM</option>
-                    <option value="08:30 AM">08:30 AM</option>
-                    <option value="09:00 AM">09:00 AM</option>
-                    <option value="09:30 AM">09:30 AM</option>
-                    <option value="10:00 AM">10:00 AM</option>
-                    <option value="10:30 AM">10:30 AM</option>
-                    <option value="11:00 AM">11:00 AM</option>
-                    <option value="11:30 AM">11:30 AM</option>
-                    <option value="12:00 PM">12:00 PM</option>
-                </select>
-            </div>
-            <div>
-                <label>Hora de Fin (Campo Obligatorio):</label>
-                <select name="hora_fin" required>
-                    <option value="08:30 AM">08:30 AM</option>
-                    <option value="09:00 AM">09:00 AM</option>
-                    <option value="09:30 AM">09:30 AM</option>
-                    <option value="10:00 AM">10:00 AM</option>
-                    <option value="10:30 AM">10:30 AM</option>
-                    <option value="11:00 AM">11:00 AM</option>
-                    <option value="11:30 AM">11:30 AM</option>
-                    <option value="12:00 PM">12:00 PM</option>
-                    <option value="12:30 PM">12:30 PM</option>
-                </select>
-            </div>
-            </div>
+    <div>
+        <label>Hora de Inicio (Campo Obligatorio):</label>
+        <select id="hora_inicio" name="hora_inicio" required>
+            <option value="08:00 AM">08:00 AM</option>
+            <option value="08:30 AM">08:30 AM</option>
+            <option value="09:00 AM">09:00 AM</option>
+            <option value="09:30 AM">09:30 AM</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="10:30 AM">10:30 AM</option>
+            <option value="11:00 AM">11:00 AM</option>
+            <option value="11:30 AM">11:30 AM</option>
+            <option value="12:00 PM">12:00 PM</option>
+        </select>
+    </div>
+    <div>
+        <label>Hora de Fin (Campo Obligatorio):</label>
+        <select id="hora_fin" name="hora_fin" required>
+            <option value="08:30 AM">08:30 AM</option>
+            <option value="09:00 AM">09:00 AM</option>
+            <option value="09:30 AM">09:30 AM</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="10:30 AM">10:30 AM</option>
+            <option value="11:00 AM">11:00 AM</option>
+            <option value="11:30 AM">11:30 AM</option>
+            <option value="12:00 PM">12:00 PM</option>
+            <option value="12:30 PM">12:30 PM</option>
+        </select>
+    </div>
+</div>
 
             <label>Lugar (Campo Obligatorio):</label>
             <select name="lugar_evento" required>
@@ -552,6 +515,82 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!inputNombreEvento.value.trim()) {
             alert("El nombre del evento no puede estar vacío o contener solo espacios.");
             event.preventDefault(); // Detiene el envío del formulario
+        }
+    });
+});
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let fechaEvento = document.getElementById("fecha_evento");
+        let difusionInicio = document.getElementById("difusion_fecha_inicio");
+        let difusionTermino = document.getElementById("difusion_fecha_termino");
+
+        function validarFechas() {
+            let fechaEventoValue = new Date(fechaEvento.value);
+            let difusionInicioValue = new Date(difusionInicio.value);
+            let difusionTerminoValue = new Date(difusionTermino.value);
+
+            // Verifica que la fecha de difusión inicio no sea antes de la fecha del evento
+            if (difusionInicio.value && difusionInicioValue < fechaEventoValue) {
+                alert("La fecha de publicación no puede ser primero que la fecha del evento");
+                difusionInicio.value = ""; // Limpia el campo inválido
+                return;
+            }
+
+            // Verifica que la fecha de difusión término no sea antes de la fecha del evento
+            if (difusionTermino.value && difusionTerminoValue < fechaEventoValue) {
+                alert("La fecha de publicación término no puede ser primero que la fecha del evento");
+                difusionTermino.value = ""; // Limpia el campo inválido
+                return;
+            }
+
+            // Verifica que la fecha de difusión inicio no sea mayor que la de término
+            if (difusionInicio.value && difusionTermino.value && difusionInicioValue > difusionTerminoValue) {
+                alert("La fecha de publicación término no puede ser antes que la fecha de publicación");
+                difusionInicio.value = ""; // Limpia el campo inválido
+            }
+        }
+
+        // Se ejecuta cuando cambia cualquiera de las fechas
+        fechaEvento.addEventListener("change", validarFechas);
+        difusionInicio.addEventListener("change", validarFechas);
+        difusionTermino.addEventListener("change", validarFechas);
+    });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Obtener los elementos de hora de inicio y fin
+    let horaInicio = document.getElementById("hora_inicio");
+    let horaFin = document.getElementById("hora_fin");
+
+    // Función para validar que la hora de fin sea mayor que la hora de inicio
+    function validarHoras() {
+        let horaInicioValue = horaInicio.value;
+        let horaFinValue = horaFin.value;
+
+        if (horaInicioValue && horaFinValue) {
+            // Comparar las horas
+            if (horaFinValue <= horaInicioValue) {
+                alert("La hora de fin debe ser mayor que la hora de inicio.");
+                horaFin.value = ""; // Limpiar la selección de hora_fin
+            }
+        }
+    }
+
+    // Validar las horas cuando se cambian
+    horaInicio.addEventListener("change", validarHoras);
+    horaFin.addEventListener("change", validarHoras);
+
+    // Validar al enviar el formulario
+    document.getElementById("solicitudForm").addEventListener("submit", function(event) {
+        // Ejecuta la validación de horas antes de enviar el formulario
+        if (horaInicio.value && horaFin.value) {
+            if (horaFin.value <= horaInicio.value) {
+                event.preventDefault();  // Prevenir el envío si las horas no son válidas
+                alert("La hora de fin debe ser mayor que la hora de inicio.");
+            }
         }
     });
 });
