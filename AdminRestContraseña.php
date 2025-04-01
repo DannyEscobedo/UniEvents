@@ -78,9 +78,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_update->bind_param("ss", $nueva_contraseña, $num_control);  // Actualiza solo la contraseña
 
         if ($stmt_update->execute()) {
-            $mensaje = "Contraseña actualizada correctamente. ¡Notifica al usuario su modificación por correo!";
-            $num_control = "";  // Limpiar el campo de número de control
-            $nueva_contraseña = "";  // Limpiar el campo de la nueva contraseña
+            echo "<script>
+                alert('Contraseña actualizada correctamente. ¡Notifica al usuario su modificación por correo!');
+                window.location.href = 'MenuAdministrador.php';
+            </script>";
+            exit; // Detener la ejecución del script después de la redirección
         } else {
             $errorContraseña = "Error al actualizar la contraseña.";
         }
