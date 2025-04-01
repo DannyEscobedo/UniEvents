@@ -291,7 +291,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <label>Impresión/Copias:</label>
             <div class="checkbox-group">
-                <input type="number" id="num_copias" name="num_copias" min="1" max="5000" disabled oninput="validarLongitud(this)" maxlength="4">
+                <input type="number" id="num_copias" name="num_copias" min="1" max="5000" disabled 
+                    oninput="validarLongitud(this)" maxlength="4" value="0">
             </div>
             <p>*Anexar por CORREO ELECTRÓNICO los respectivos nombres de quienes recibirán reconocimiento.</p>
 
@@ -484,20 +485,25 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Si se selecciona "Diploma", se habilita el campo de copias
+        // Si se selecciona "Diploma", se habilita el campo de copias y lo establece en 0
         if (document.getElementById("diploma").checked) {
             numCopias.disabled = false;
+            numCopias.value = 0; // Asegura que inicie en 0 al activarlo
         } else {
             numCopias.disabled = true;
-            numCopias.value = ""; // Limpia el campo si no es "Diploma"
+            numCopias.value = 0; // Siempre vuelve a 0 al deshabilitarlo
         }
     }
 
     function validarLongitud(input) {
-        input.value = input.value.replace(/^0+/, '');
+        input.value = input.value.replace(/^0+/, ''); // Elimina ceros al inicio
 
-        if (input.value === '') {
-            input.value = 1;
+        if (input.value === '' || isNaN(input.value)) {
+            input.value = 0; // Si está vacío, vuelve a 0 en lugar de 1
+        }
+
+        if (input.value < 1) {
+            input.value = 1; // No permite valores menores a 1
         }
 
         if (input.value.length > 4) {
