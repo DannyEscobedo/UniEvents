@@ -112,8 +112,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <option value="Depto. Subdirección Académica" <?= ($evento['depto_solicitante_nombre'] ?? '') == 'Depto. Subdirección Académica' ? 'selected' : ''; ?>>Depto. Subdirección Académica</option>
                 </select>
 
-            <label>Nombre del Evento:<label>
-            <input type="text" name="nombre_evento" value="<?= $evento['nombre_evento'] ?? ''; ?>" minlength="3" maxlength="25" required>
+           <label>Nombre del Evento:</label>
+    <input type="text" id="nombre_evento" name="nombre_evento" 
+        value="<?= $evento['nombre_evento'] ?? ''; ?>" 
+        minlength="3" maxlength="25" required>
+    <p id="error-nombre" class="error-message" style="color: red; display: none;">
+        El nombre del evento debe tener al menos 3 caracteres.
+    </p>
 
             <label>Fecha del Evento:</label>
             <input type="date" id="fecha_evento" name="fecha_evento" value="<?= $evento['fecha_evento'] ?? ''; ?>" required>
@@ -377,6 +382,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             input.value = input.value.slice(0, 4);
         }
     }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let nombreEvento = document.querySelector("input[name='nombre_evento']");
+
+    nombreEvento.addEventListener("input", function () {
+        if (nombreEvento.value.length < 3) {
+            nombreEvento.setCustomValidity("El nombre del evento debe tener al menos 3 caracteres.");
+        } else {
+            nombreEvento.setCustomValidity("");
+        }
+    });
+});
 </script>
 
 <script>
