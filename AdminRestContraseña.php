@@ -268,7 +268,12 @@ $conn->close();
 
         <form method="POST" action="">
           <div class="input-container">
-        <input type="text" name="num_control" placeholder="Número de control" value="<?php echo htmlspecialchars($num_control); ?>" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+        <input type="text" name="num_control" placeholder="Número de control"
+    value="<?php echo htmlspecialchars($num_control); ?>"
+    minlength="8" maxlength="8" pattern="\d{8}"
+    oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+    title="El número de control debe tener exactamente 8 dígitos.">
+
         <i class='bx bxs-user'></i>
         <?php if (!empty($errorNumControl)): ?>
             <p class="error-message"><?php echo $errorNumControl; ?></p>
