@@ -191,7 +191,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="nombre_evento" minlength="3" maxlength="25" required>
 
             <label>Fecha del Evento (Campo Obligatorio):</label>
-            <input type="date" id="fecha_evento" name="fecha_evento" required>
+            <input type="date" id="fecha_evento" name="fecha_evento" required onkeydown="return false;">
 
             <div class="checkbox-group">
     <div>
@@ -268,10 +268,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <label>Fecha de Publicación (Campo Obligatorio):</label>
-            <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" required>
+            <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" required onkeydown="return false;">
 
             <label>Fecha de término de Publicación (Campo Obligatorio):</label>
-            <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" required>
+            <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" required onkeydown="return false;">
 
             <label>Diseño:</label>
             <div class="checkbox-group">
