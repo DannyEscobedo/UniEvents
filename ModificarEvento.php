@@ -121,7 +121,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </p>
 
             <label>Fecha del Evento:</label>
-            <input type="date" id="fecha_evento" name="fecha_evento" value="<?= $evento['fecha_evento'] ?? ''; ?>" required>
+            <input type="date" id="fecha_evento" name="fecha_evento" 
+       value="<?= $evento['fecha_evento'] ?? ''; ?>" required 
+       onkeydown="return false;">
 
          <p>*FAVOR DE VOLVER A COLOCAR TU HORA DE PREFERENCIA*</p>
             <div class="checkbox-group">
@@ -200,10 +202,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
             <label>Fecha de Publicación:</label>
-            <input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" value="<?= $evento['difusion_fecha_inicio'] ?? ''; ?>" required>
+<input type="date" id="difusion_fecha_inicio" name="difusion_fecha_inicio" 
+       value="<?= $evento['difusion_fecha_inicio'] ?? ''; ?>" required 
+       onkeydown="return false;">
 
-            <label>Fecha de término de Publicación:</label>
-            <input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" value="<?= $evento['difusion_fecha_termino'] ?? ''; ?>" required>
+<label>Fecha de término de Publicación:</label>
+<input type="date" id="difusion_fecha_termino" name="difusion_fecha_termino" 
+       value="<?= $evento['difusion_fecha_termino'] ?? ''; ?>" required 
+       onkeydown="return false;">
 
             <label>Diseño:</label>
             <div class="checkbox-group">
