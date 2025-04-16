@@ -90,6 +90,14 @@ $result = $stmt->get_result();
             cursor: pointer;
         }
 
+        .disabled-button {
+            padding: 5px 10px;
+            background-color: #darkred;
+            color: #black;
+            border: none;
+            cursor: not-allowed;
+        }
+
         button:hover {
             background-color: #d32f2f;
         }
@@ -135,24 +143,24 @@ $result = $stmt->get_result();
             <td><?= $row["fecha_evento"] ?></td>
             <td><?= $row["evento_status"] ?></td>
             <td>
-                <?php if ($row["evento_status"] !== 'Aceptado'): ?>
-                    <!-- Si el evento no está en estado 'Aceptado', mostrar los botones de Modificar y Cancelar -->
-                    <form action="ModificarEvento.php" method="post" style="display: inline;">
-                        <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                        <button type="submit" style="background-color: #ffcc00; color: black; border: none; padding: 5px 10px; cursor: pointer;">Modificar</button>
-                    </form>
-                    <form action="CancelarEvento.php" method="post" style="display: inline;">
-                        <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                        <button type="submit" style="background-color: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer;" onclick="return confirm('¿Estás seguro de cancelar este evento?');">
-                            Cancelar
-                        </button>
-                    </form>
-                <?php else: ?>
-                    <!-- Si el evento está en estado 'Aceptado', mostrar un mensaje y deshabilitar los botones -->
-                    <span style="color: red; font-weight: bold;">Este evento no puede ser modificado ni cancelado.</span>
-                    <button class="disabled-button" disabled>Modificar</button>
-                    <button class="disabled-button" disabled>Cancelar</button>
-                <?php endif; ?>
+                <?php if ($row["evento_status"] !== 'Aceptado' && $row["evento_status"] !== 'Rechazado'): ?>
+            <!-- Si el evento no está en estado 'Aceptado', mostrar los botones de Modificar y Cancelar -->
+            <form action="ModificarEvento.php" method="post" style="display: inline;">
+                <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
+                <button type="submit" style="background-color: #ffcc00; color: black; border: none; padding: 5px 10px; cursor: pointer;">Modificar</button>
+            </form>
+            <form action="CancelarEvento.php" method="post" style="display: inline;">
+                <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
+                <button type="submit" style="background-color: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer;" onclick="return confirm('¿Estás seguro de cancelar este evento?');">
+                    Cancelar
+                </button>
+            </form>
+        <?php else: ?>
+            <!-- Si el evento está en estado 'Aceptado', mostrar un mensaje y deshabilitar los botones -->
+            <span style="color: red; font-weight: bold;">Este evento no puede ser modificado ni cancelado.</span>
+            <button class="disabled-button" disabled>Modificar</button>
+            <button class="disabled-button" disabled>Cancelar</button>
+        <?php endif; ?>
             </td>
         </tr>
     <?php endwhile; ?>
