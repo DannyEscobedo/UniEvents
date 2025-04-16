@@ -73,8 +73,9 @@ if (!isset($_SESSION["usuario"])) {
     <div class="navbar">
         <div>
             <a href="MenuAdministrador.php">Inicio</a>
+            <a href="EstatusEventosAdmin.php">Estatus Eventos</a>
             <a href="CalendarioDisponibilidad.php">Calendario de Disponibilidad</a>
-            <a href="RestablecerContraseña.php">Restablecer Contraseña</a>
+            <a href="AdminRestContraseña.php">Restablecer Contraseña</a>
         </div>
         <a href="CerrarSesion.php">Cerrar sesión</a>
     </div>
