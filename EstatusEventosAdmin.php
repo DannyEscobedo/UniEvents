@@ -7,7 +7,7 @@ if (!isset($_SESSION["usuario"])) {
     exit();
 }
 
-$sql = "SELECT num_solicitud, nombre_evento, fecha_evento, evento_status FROM solicitud";
+$sql = "SELECT num_solicitud, nombre_evento, fecha_evento, hora_inicio, hora_fin, evento_status FROM solicitud";
 $result = $conn->query($sql);
 ?>
 
@@ -119,49 +119,53 @@ $result = $conn->query($sql);
 <div class="container">
     <h2>Solicitudes por Atender</h2>
     <table>
-        <tr>
-            <th>Número de Solicitud</th>
-            <th>Evento</th>
-            <th>Fecha</th>
-            <th>Estatus</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <?php
-                $rowClass = "";
-                $disabled = "";
+    <tr>
+        <th>Número de Solicitud</th>
+        <th>Evento</th>
+        <th>Fecha</th>
+        <th>Hora Inicio</th> <!-- nueva columna -->
+        <th>Hora Fin</th>    <!-- nueva columna -->
+        <th>Estatus</th>
+    </tr>
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <?php
+            $rowClass = "";
+            $disabled = "";
 
-                if ($row['evento_status'] === 'Aceptado') {
-                    $rowClass = "accepted";
-                    $disabled = "disabled";
-                } elseif ($row['evento_status'] === 'Rechazado') {
-                    $rowClass = "rejected";
-                    $disabled = "disabled";
-                }
-            ?>
-            <tr class="<?= $rowClass ?>">
-                <td><?= $row["num_solicitud"] ?></td>
-                <td><?= $row["nombre_evento"] ?></td>
-                <td><?= $row["fecha_evento"] ?></td>
-                <td>
-                    <form action="AceptarEventoAdmin.php" method="post" style="display:inline;">
-                        <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                        <button 
-                            class="btn btn-aceptar <?= $disabled ?>" 
-                            type="submit" 
-                            data-fecha="<?= $row['fecha_evento'] ?>" 
-                            onclick="return validarFecha(this);" 
-                            <?= $disabled ?>>
-                            Aceptar
-                        </button>
-                    </form>
-                    <form action="CancelarEventoAdmin.php" method="post" style="display:inline;">
-                        <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                        <button class="btn btn-rechazar <?= $disabled ?>" type="submit" <?= $disabled ?> onclick="return confirm('¿Estás seguro de querer rechazar esta solicitud?');">Rechazar</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    </table>
+            if ($row['evento_status'] === 'Aceptado') {
+                $rowClass = "accepted";
+                $disabled = "disabled";
+            } elseif ($row['evento_status'] === 'Rechazado') {
+                $rowClass = "rejected";
+                $disabled = "disabled";
+            }
+        ?>
+        <tr class="<?= $rowClass ?>">
+            <td><?= $row["num_solicitud"] ?></td>
+            <td><?= $row["nombre_evento"] ?></td>
+            <td><?= $row["fecha_evento"] ?></td>
+            <td><?= $row["hora_inicio"] ?></td> <!-- nuevo dato -->
+            <td><?= $row["hora_fin"] ?></td>     <!-- nuevo dato -->
+            <td>
+                <form action="AceptarEventoAdmin.php" method="post" style="display:inline;">
+                    <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
+                    <button 
+                        class="btn btn-aceptar <?= $disabled ?>" 
+                        type="submit" 
+                        data-fecha="<?= $row['fecha_evento'] ?>" 
+                        onclick="return validarFecha(this);" 
+                        <?= $disabled ?>>
+                        Aceptar
+                    </button>
+                </form>
+                <form action="CancelarEventoAdmin.php" method="post" style="display:inline;">
+                    <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
+                    <button class="btn btn-rechazar <?= $disabled ?>" type="submit" <?= $disabled ?> onclick="return confirm('¿Estás seguro de querer rechazar esta solicitud?');">Rechazar</button>
+                </form>
+            </td>
+        </tr>
+    <?php endwhile; ?>
+</table>
 </div>
 
 <script>
