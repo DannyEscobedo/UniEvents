@@ -8,9 +8,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["num_solicitud"])) {
     $stmt->bind_param("i", $num_solicitud);
 
     if ($stmt->execute()) {
-        header("Location: EstatusEventosAdmin.php");
+        echo "<script>
+                alert('Evento rechazado exitosamente.');
+                window.location.href = 'EstatusEventosAdmin.php';
+              </script>";
     } else {
-        echo "Error al rechazar el evento.";
+        echo "<script>
+                alert('Error al rechazar el evento.');
+                window.location.href = 'EstatusEventosAdmin.php';
+              </script>";
     }
 
     $stmt->close();
