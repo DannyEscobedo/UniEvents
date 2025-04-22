@@ -156,7 +156,7 @@ $result = $conn->query($sql);
                     </form>
                     <form action="CancelarEventoAdmin.php" method="post" style="display:inline;">
                         <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                        <button class="btn btn-rechazar <?= $disabled ?>" type="submit" <?= $disabled ?>>Rechazar</button>
+                        <button class="btn btn-rechazar <?= $disabled ?>" type="submit" <?= $disabled ?> onclick="return confirm('¿Estás seguro de querer rechazar esta solicitud?');">Rechazar</button>
                     </form>
                 </td>
             </tr>
