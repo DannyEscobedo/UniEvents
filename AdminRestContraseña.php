@@ -128,7 +128,7 @@ $conn->close();
     .navbar {
         background-color: #25344f;
         overflow: hidden;
-        padding: 10px;
+        padding: 7px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -257,7 +257,7 @@ $conn->close();
     <div class="navbar">
         <div>
             <a href="MenuAdministrador.php">Inicio</a>
-            <a href="CalendarioDisponibilidad.php">Calendario de Disponibilidad</a>
+            <a href="EstatusEventosAdmin.php">Estatus Eventos</a>
             <a href="AdminRestContraseña.php">Restablecer Contraseña</a>
         </div>
         <a href="CerrarSesion.php">Cerrar sesión</a>
