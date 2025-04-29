@@ -155,7 +155,7 @@ function validarFecha(boton) {
     fechaEvento.setHours(0, 0, 0, 0);
 
     if (fechaEvento < hoy) {
-        alert("No se puede aceptar un evento cuya fecha ya pasó. Solo puedes rechazarlo.");
+        alert("No se puede aceptar un evento cuya fecha u hora ya pasó. Solo puedes rechazarlo.");
         return false;
     }
     return true;
