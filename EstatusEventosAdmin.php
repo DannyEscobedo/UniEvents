@@ -7,8 +7,19 @@ if (!isset($_SESSION["usuario"])) {
     exit();
 }
 
-$sql = "SELECT num_solicitud, nombre_evento, fecha_evento, hora_inicio, hora_fin, evento_status FROM solicitud";
+// Solo obtener eventos pendientes
+$sql = "SELECT num_solicitud, nombre_evento, fecha_evento, hora_inicio, hora_fin, evento_status FROM solicitud WHERE evento_status = 'Pendiente'";
 $result = $conn->query($sql);
+
+if (isset($_GET['accion'])) {
+    if ($_GET['accion'] === 'aceptado') {
+        echo "<script>alert('Evento aceptado exitosamente');</script>";
+    } elseif ($_GET['accion'] === 'rechazado') {
+        echo "<script>alert('Evento rechazado exitosamente');</script>";
+    } elseif ($_GET['accion'] === 'error') {
+        echo "<script>alert('Ocurrió un error al actualizar el evento');</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -89,19 +100,6 @@ $result = $conn->query($sql);
         .btn-rechazar {
             background-color: #f44336;
         }
-
-        .accepted {
-            background-color: #c8e6c9 !important;
-        }
-
-        .rejected {
-            background-color: #ffcdd2 !important;
-        }
-
-        .disabled {
-            opacity: 0.6;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
@@ -123,44 +121,25 @@ $result = $conn->query($sql);
         <th>Número de Solicitud</th>
         <th>Evento</th>
         <th>Fecha</th>
-        <th>Hora Inicio</th> <!-- nueva columna -->
-        <th>Hora Fin</th>    <!-- nueva columna -->
-        <th>Estatus</th>
+        <th>Hora Inicio</th>
+        <th>Hora Fin</th>
+        <th>Botones</th>
     </tr>
     <?php while ($row = $result->fetch_assoc()): ?>
-        <?php
-            $rowClass = "";
-            $disabled = "";
-
-            if ($row['evento_status'] === 'Aceptado') {
-                $rowClass = "accepted";
-                $disabled = "disabled";
-            } elseif ($row['evento_status'] === 'Rechazado') {
-                $rowClass = "rejected";
-                $disabled = "disabled";
-            }
-        ?>
-        <tr class="<?= $rowClass ?>">
+        <tr>
             <td><?= $row["num_solicitud"] ?></td>
             <td><?= $row["nombre_evento"] ?></td>
             <td><?= $row["fecha_evento"] ?></td>
-            <td><?= $row["hora_inicio"] ?></td> <!-- nuevo dato -->
-            <td><?= $row["hora_fin"] ?></td>     <!-- nuevo dato -->
+            <td><?= $row["hora_inicio"] ?></td>
+            <td><?= $row["hora_fin"] ?></td>
             <td>
                 <form action="AceptarEventoAdmin.php" method="post" style="display:inline;">
                     <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                    <button 
-                        class="btn btn-aceptar <?= $disabled ?>" 
-                        type="submit" 
-                        data-fecha="<?= $row['fecha_evento'] ?>" 
-                        onclick="return validarFecha(this);" 
-                        <?= $disabled ?>>
-                        Aceptar
-                    </button>
+                    <button class="btn btn-aceptar" type="submit" data-fecha="<?= $row['fecha_evento'] ?>" onclick="return validarFecha(this);">Aceptar</button>
                 </form>
                 <form action="CancelarEventoAdmin.php" method="post" style="display:inline;">
                     <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                    <button class="btn btn-rechazar <?= $disabled ?>" type="submit" <?= $disabled ?> onclick="return confirm('¿Estás seguro de querer rechazar esta solicitud?');">Rechazar</button>
+                    <button class="btn btn-rechazar" type="submit" onclick="return confirm('¿Estás seguro de querer rechazar esta solicitud?');">Rechazar</button>
                 </form>
             </td>
         </tr>
