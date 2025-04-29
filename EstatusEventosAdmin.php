@@ -26,7 +26,7 @@ if (isset($_GET['accion'])) {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Administrar Solicitudes</title>
+    <title>Estatus Eventos Admin</title>
     <style>
          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         body {
@@ -144,6 +144,23 @@ if (isset($_GET['accion'])) {
         </tr>
     <?php endwhile; ?>
 </table>
+</div>
+
+<!-- Botón para ir al calendario -->
+<div style="margin: 20px;">
+    <form action="VisualizarCalendarioAdmin.php" method="get">
+        <button type="submit" style="padding: 10px 20px; background-color: #25344f; margin-left: 200px; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Ver Calendario
+        </button>
+    </form>
+</div>
+
+<div>
+ <form action="FichaEventos.php" method="get">
+    <button type="submit" style="padding: 10px 20px; background-color: #25344f; margin-left: 220px; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Fichas de Eventos
+        </button>
+    </form>
 </div>
 
 <script>
