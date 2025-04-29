@@ -13,7 +13,7 @@ $conn = new mysqli($servidor, $usuario, $password, $base_datos);
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 } else {
-    echo "Conectado exitosamente";  // Opcional, solo para confirmar la conexión
+    //echo "Conectado exitosamente";  // Opcional, solo para confirmar la conexión
 }
 
 // Configurar el charset de la conexión para UTF-8
