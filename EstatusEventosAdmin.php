@@ -26,7 +26,7 @@ if (isset($_GET['accion'])) {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Estatus Eventos Admin</title>
+    <title>Gestionar Eventos</title>
     <style>
          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         body {
@@ -107,7 +107,7 @@ if (isset($_GET['accion'])) {
     <div class="navbar">
         <div>
             <a href="MenuAdministrador.php">Inicio</a>
-            <a href="EstatusEventosAdmin.php">Estatus Eventos</a>
+            <a href="EstatusEventosAdmin.php">Gestionar Eventos</a>
             <a href="AdminRestContraseña.php">Restablecer Contraseña</a>
         </div>
         <a href="CerrarSesion.php">Cerrar sesión</a>
