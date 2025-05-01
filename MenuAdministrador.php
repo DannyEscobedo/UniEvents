@@ -60,11 +60,6 @@ if (!isset($_SESSION["usuario"])) {
             margin-top: -35px;
             font-weight: bold;
         }
-        /* Estilo del calendario */
-        #calendario {
-            max-width: 900px;
-            margin: 20px auto;
-        }
     </style>
 </head>
 <body>
