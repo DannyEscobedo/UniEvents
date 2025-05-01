@@ -156,9 +156,9 @@ if (isset($_GET['accion'])) {
 </div>
 
 <div>
- <form action="FichaEventos.php" method="get">
+ <form action="EventosAceptados.php" method="get">
     <button type="submit" style="padding: 10px 20px; background-color: #25344f; margin-left: 220px; color: white; border: none; border-radius: 5px; cursor: pointer;">
-            Fichas de Eventos
+            Registrar Personal
         </button>
     </form>
 </div>
