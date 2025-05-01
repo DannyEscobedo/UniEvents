@@ -18,9 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["num_solicitud"])) {
         WHERE fecha_evento = ?
         AND evento_status = 'Aceptado'
         AND (
-            (hora_inicio < ? AND hora_fin > ?) OR  -- Empieza antes y termina después de que empieza el nuevo
-            (hora_inicio < ? AND hora_fin > ?) OR  -- Empieza antes y termina después de que termina el nuevo
-            (hora_inicio >= ? AND hora_fin <= ?)   -- Está completamente dentro del nuevo horario
+            (hora_inicio < ? AND hora_fin > ?) OR
+            (hora_inicio < ? AND hora_fin > ?) OR
+            (hora_inicio >= ? AND hora_fin <= ?)
         )
     ");
     $verifica->bind_param("sssssss", $fecha_evento, $hora_fin, $hora_inicio, $hora_fin, $hora_fin, $hora_inicio, $hora_fin);
@@ -42,6 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["num_solicitud"])) {
     $stmt->bind_param("i", $num_solicitud);
 
     if ($stmt->execute()) {
+        // Insertar también en la tabla estatus_evento
+        $estatus = "aceptado";
+        $insert = $conn->prepare("INSERT INTO estatus_evento (estatus, num_solicitud) VALUES (?, ?)");
+        $insert->bind_param("si", $estatus, $num_solicitud);
+        $insert->execute();
+        $insert->close();
+
         echo "<script>
                 alert('Evento aceptado exitosamente.');
                 window.location.href = 'EstatusEventosAdmin.php';
