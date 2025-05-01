@@ -88,8 +88,7 @@ while ($row = $result->fetch_assoc()) {
 
 <div style="position: absolute; top: 85%; left: 200px; transform: translateY(-50%);">
      <form action="EstatusEventosAdmin.php" method="get">
-    <button type="submit" style="padding: 10px 20px; background-color: #25344f; color: white; border: none; border-radius: 5px; cursor: pointer;">
-        Regresar
+    <button type="submit" style="padding: 10px 20px; background-color: #25344f; color: white; border: none; border-radius: 5px; cursor: pointer;"> Regresar
     </button>
 </form>
 </div>
