@@ -7,6 +7,19 @@ if (!isset($_SESSION["usuario"])) {
     exit();
 }
 
+// Verifica si se recibió correctamente por POST
+if (!isset($_POST["num_solicitud"])) {
+    die("No se ha proporcionado un número de solicitud válido.");
+}
+
+$num_solicitud = $_POST["num_solicitud"];
+
+// Validar que sea numérico
+if (!is_numeric($num_solicitud)) {
+    die("El número de solicitud no es válido.");
+}
+
+// Resto de tu lógica para registrar el personal
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Asignar valores numéricos a los roles
     $roles = [
@@ -31,31 +44,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 continue;
             }
 
-           $rol = trim($partes[0]);
+            $rol = trim($partes[0]);
 
-if (array_key_exists($rol, $roles)) {
-    $rol_puesto = $roles[$rol];
+            if (array_key_exists($rol, $roles)) {
+                $rol_puesto = $roles[$rol];
 
-    $stmt = $conn->prepare("INSERT INTO puesto (rol_puesto) VALUES (?)");
-    $stmt->bind_param("i", $rol_puesto);
+                // Agregar num_solicitud al INSERT
+                $stmt = $conn->prepare("INSERT INTO puesto (rol_puesto, num_solicitud) VALUES (?, ?)");
+                $stmt->bind_param("ii", $rol_puesto, $num_solicitud);
 
-    if (!$stmt->execute()) {
-        $errores[] = "Error al insertar el rol: " . $rol;
-        $registro_exitoso = false;
-    }
+                if (!$stmt->execute()) {
+                    $errores[] = "Error al insertar el rol: " . $rol;
+                    $registro_exitoso = false;
+                }
 
-    $stmt->close();
-} else {
-    $errores[] = "Rol desconocido: " . $rol;
-    $registro_exitoso = false;
-}
+                $stmt->close();
+            } else {
+                $errores[] = "Rol desconocido: " . $rol;
+                $registro_exitoso = false;
+            }
         }
 
         // Verificar si hubo errores
         if ($registro_exitoso && empty($errores)) {
             echo "<script>alert('Personal asignado con éxito'); window.location.href = 'EventosAceptados.php';</script>";
         } else {
-            // Mostrar los errores si los hubo
             $mensaje_error = implode("\n", $errores);
             echo "<script>alert('Ocurrió un error al registrar el personal: " . $mensaje_error . "'); window.history.back();</script>";
         }
@@ -140,11 +153,13 @@ if (array_key_exists($rol, $roles)) {
 
 <div class="form-container" style="position: relative; padding-bottom: 80px;">
     <h2>Personal a Asignar</h2>
-    <form method="POST" onsubmit="return validarFormulario();">
+    <form action="GuardarPersonal.php" method="POST" onsubmit="return validarFormulario();">
+    <input type="hidden" name="num_solicitud" value="<?= htmlspecialchars($num_solicitud) ?>">
+
         <div class="section"><strong>Fotografía:</strong>
-            <label><input type="checkbox" name="personal[]" value="Fotografía - Juan Carlos Antonio Aviles" onclick="seleccionarSoloUno(this)"> Juan Carlos Antonio Aviles</label>
-            <label><input type="checkbox" name="personal[]" value="Fotografía - Cutberto Escobedo Hernandez" onclick="seleccionarSoloUno(this)"> Cutberto Escobedo Hernandez</label>
-        </div>
+        <label><input type="checkbox" name="personal[]" value="Fotografía - Juan Carlos Antonio Aviles" onclick="seleccionarSoloUno(this)"> Juan Carlos Antonio Aviles</label>
+        <label><input type="checkbox" name="personal[]" value="Fotografía - Cutberto Escobedo Hernandez" onclick="seleccionarSoloUno(this)"> Cutberto Escobedo Hernandez</label>
+    </div>
 
         <div class="section"><strong>Redes Sociales:</strong>
             <label><input type="checkbox" name="personal[]" value="Redes Sociales - Pablo Luis Davila Hernandez" onclick="seleccionarSoloUno(this)"> Pablo Luis Davila Hernandez</label>
