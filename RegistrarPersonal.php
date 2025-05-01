@@ -53,7 +53,7 @@ if (array_key_exists($rol, $roles)) {
 
         // Verificar si hubo errores
         if ($registro_exitoso && empty($errores)) {
-            echo "<script>alert('Personal asignado con éxito'); window.location.href = 'RegistrarPersonal.php';</script>";
+            echo "<script>alert('Personal asignado con éxito'); window.location.href = 'EventosAceptados.php';</script>";
         } else {
             // Mostrar los errores si los hubo
             $mensaje_error = implode("\n", $errores);
@@ -218,9 +218,6 @@ function validarFormulario() {
         alert("Debes asignar al menos a una persona.");
         return false; // bloquea el envío
     }
-
-    alert("Personal asignado con éxito.");
-    return true; // permite el envío
 }
 </script>
 
