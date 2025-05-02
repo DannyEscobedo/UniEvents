@@ -7,29 +7,44 @@ if (!isset($_SESSION["usuario"])) {
     exit();
 }
 
-// Consulta solo eventos aceptados que aún NO tienen personal asignado
-$sql = "SELECT e.num_solicitud 
-        FROM estatus_evento e
-        WHERE e.estatus = 'aceptado' 
-        AND NOT EXISTS (
-            SELECT 1 
-            FROM puesto p 
-            WHERE p.num_solicitud = e.num_solicitud
-        )";
+// Consulta eventos aceptados que aún NO tienen personal asignado
+$sql = "
+SELECT e.num_solicitud, s.fecha_evento, s.hora_inicio
+FROM estatus_evento e
+INNER JOIN solicitud s ON e.num_solicitud = s.num_solicitud
+WHERE e.estatus = 'aceptado'
+AND NOT EXISTS (
+    SELECT 1 
+    FROM puesto p 
+    WHERE p.num_solicitud = e.num_solicitud
+)
+AND (
+    s.fecha_evento > CURDATE() OR
+    (s.fecha_evento = CURDATE() AND s.hora_inicio > CURTIME())
+)";
 
 $result = $conn->query($sql);
 
-// Verificación opcional
 if (!$result) {
     die("Error en la consulta SQL: " . $conn->error);
 }
 
-// Recuperar los resultados y pasarlos al formulario
 $eventos_aceptados = [];
 while ($row = $result->fetch_assoc()) {
-    $eventos_aceptados[] = $row['num_solicitud']; // Guardamos num_solicitud de los eventos
-}
+    $fechaEvento = $row['fecha_evento'];
+    $horaInicio = $row['hora_inicio'];
+    $fechaHoraEvento = strtotime("$fechaEvento $horaInicio");
+    $ahora = time();
 
+    // Solo guardar si el evento aún no ha pasado
+    if ($fechaHoraEvento > $ahora) {
+        $eventos_aceptados[] = [
+            'num_solicitud' => $row['num_solicitud'],
+            'fecha_evento' => $fechaEvento,
+            'hora_inicio' => $horaInicio
+        ];
+    }
+}
 ?>
 
 <!DOCTYPE html>
