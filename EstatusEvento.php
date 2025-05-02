@@ -119,7 +119,6 @@ $result = $stmt->get_result();
         <a href="MenuSolicitante.php">Inicio</a>
         <a href="SolicitarEvento.php">Solicitar Evento</a>
         <a href="EstatusEvento.php">Estatus del Evento</a>
-        <a href="FichaTecnica.php">Ficha Técnica del Evento</a>
         <a href="SubirFlyer.php">Subir Flyer</a>
     </div>
     <a href="CerrarSesion.php">Cerrar sesión</a>
