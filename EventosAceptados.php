@@ -31,22 +31,9 @@ if (!$result) {
 
 $eventos_aceptados = [];
 while ($row = $result->fetch_assoc()) {
-    $fechaEvento = $row['fecha_evento'];
-    $horaInicio = $row['hora_inicio'];
-    $fechaHoraEvento = strtotime("$fechaEvento $horaInicio");
-    $ahora = time();
-
-    // Solo guardar si el evento aún no ha pasado
-    if ($fechaHoraEvento > $ahora) {
-        $eventos_aceptados[] = [
-            'num_solicitud' => $row['num_solicitud'],
-            'fecha_evento' => $fechaEvento,
-            'hora_inicio' => $horaInicio
-        ];
-    }
+    $eventos_aceptados[] = $row;
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,53 +123,27 @@ while ($row = $result->fetch_assoc()) {
         <th>Número de solicitud</th>
         <th>Botón</th>
     </tr>
-    <?php
-    include("conexion.php");
-
-    // Verificar si el usuario está logueado
-    if (!isset($_SESSION["usuario"])) {
-        header("Location: IniciarSesion.php");
-        exit();
-    }
-
-    // Consulta los eventos aceptados que no tienen personal asignado
-    $sql = "SELECT e.num_solicitud 
-            FROM estatus_evento e
-            WHERE e.estatus = 'aceptado' 
-            AND NOT EXISTS (
-                SELECT 1 
-                FROM puesto p 
-                WHERE p.num_solicitud = e.num_solicitud
-            )";
-
-    $result = $conn->query($sql);
-
-    // Verificación opcional
-    if (!$result) {
-        die("Error en la consulta SQL: " . $conn->error);
-    }
-
-    // Mostrar los resultados en la tabla
-    while ($row = $result->fetch_assoc()): ?>
+    <?php foreach ($eventos_aceptados as $evento): ?>
         <tr>
-            <td><?= $row['num_solicitud'] ?></td>
+            <td><?= $evento['num_solicitud'] ?></td>
             <td>
-                <!-- Formulario para registrar personal -->
                 <form action="RegistrarPersonal.php" method="post">
-    <!-- Asegúrate de que num_solicitud esté dentro del formulario como un campo hidden -->
-    <input type="hidden" name="num_solicitud" value="<?= $row['num_solicitud'] ?>">
-
-    <button type="submit" class="btn-personal">Registrar Personal para Evento <?= $row['num_solicitud'] ?></button>
-</form>
+                    <input type="hidden" name="num_solicitud" value="<?= $evento['num_solicitud'] ?>">
+                    <button type="submit" class="btn-personal">
+                        Registrar Personal para Evento <?= $evento['num_solicitud'] ?>
+                    </button>
+                </form>
             </td>
         </tr>
-    <?php endwhile; ?>
+    <?php endforeach; ?>
 </table>
+
 <div style="position: absolute; top: 85%; left: 200px; transform: translateY(-50%);">
-     <form action="EstatusEventosAdmin.php" method="get">
-    <button type="submit" style="padding: 10px 20px; background-color: #25344f; color: white; border: none; border-radius: 5px; cursor: pointer;"> Regresar
-    </button>
-</form>
+    <form action="EstatusEventosAdmin.php" method="get">
+        <button type="submit" style="padding: 10px 20px; background-color: #25344f; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Regresar
+        </button>
+    </form>
 </div>
 </body>
 </html>
