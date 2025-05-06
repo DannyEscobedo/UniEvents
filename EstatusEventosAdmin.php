@@ -134,7 +134,7 @@ if (isset($_GET['accion'])) {
             <td>
                 <form action="AceptarEventoAdmin.php" method="post" style="display:inline;">
                     <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-                    <button class="btn btn-aceptar" type="submit" data-fecha="<?= $row['fecha_evento'] ?>" onclick="return validarFecha(this);">Aceptar</button>
+    <button class="btn btn-aceptar" type="submit" data-fecha="<?= $row['fecha_evento'] ?>" onclick="return confirm('¿Estás seguro de querer aceptar esta solicitud?') && validarFecha(this);">Aceptar</button>
                 </form>
                 <form action="CancelarEventoAdmin.php" method="post" style="display:inline;">
                     <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
