@@ -54,7 +54,7 @@ if (isset($_GET['accion'])) {
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 40px auto;
             background: #ffffff;
             padding: 25px;
@@ -100,6 +100,9 @@ if (isset($_GET['accion'])) {
         .btn-rechazar {
             background-color: #f44336;
         }
+        .btn-mirar {
+            background-color: darkblue;
+        }
     </style>
 </head>
 <body>
@@ -123,6 +126,7 @@ if (isset($_GET['accion'])) {
         <th>Hora Inicio</th>
         <th>Hora Fin</th>
         <th>Botones</th>
+        <th>Ver Solicitud</th>
     </tr>
     <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
@@ -140,6 +144,12 @@ if (isset($_GET['accion'])) {
                     <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
                     <button class="btn btn-rechazar" type="submit" onclick="return confirm('¿Estás seguro de querer rechazar esta solicitud?');">Rechazar</button>
                 </form>
+            </td>
+            <td>
+                <form action="VerSolicitud.php" method="post">
+        <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
+        <button class="btn btn-mirar" type="submit">Ver Detalles</button>
+    </form>
             </td>
         </tr>
     <?php endwhile; ?>
