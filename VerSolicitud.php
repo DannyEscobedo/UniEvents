@@ -153,7 +153,7 @@ $solicitud = $result->fetch_assoc();
         <!-- Boton inferior -->
         <div style="position: absolute; bottom: -750px; left: 920px; right: 0px; display: flex; justify-content: space-between; padding: 0 25px;">
             <!-- Regresar -->
-            <button type="button" onclick="window.location.href='EstatusEventosAdmin.php'" 
+            <button type="button" onclick="window.location.href='EventosAceptados.php'" 
                 style="padding: 10px 20px; background-color: #25344f; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px;">
                 Regresar
             </button>
