@@ -107,10 +107,15 @@ while ($row = $result->fetch_assoc()) {
             margin-top: 35px;
             font-size: 24px;
         }
+        h3 {
+            text-align: center;
+            color: red;
+            font-size: 18px;
+        }
 
         .tabla-eventos {
             width: 70%;
-            margin: 30px auto;
+            margin: 15px auto;
             border-collapse: collapse;
             background: white;
         }
@@ -136,7 +141,7 @@ while ($row = $result->fetch_assoc()) {
         }
 
         .btn-personal:hover {
-            background-color: #39588f;
+            background-color: darkblue;
         }
     </style>
 </head>
@@ -152,10 +157,12 @@ while ($row = $result->fetch_assoc()) {
 </div>
 
 <h2>Eventos Aceptados</h2>
+<h3>⚠️¡Recuerda verificar que servicios fueron solicitados antes de asignar personal en "Ver Solicitud"!</h3>
 <table class="tabla-eventos">
     <tr>
         <th>Número de solicitud</th>
         <th>Botón</th>
+        <th>Ver Solicitud</th>
     </tr>
     <?php foreach ($eventos_aceptados as $evento): ?>
         <tr>
@@ -166,7 +173,13 @@ while ($row = $result->fetch_assoc()) {
                     <button type="submit" class="btn-personal">
                         Registrar Personal para Evento <?= $evento['num_solicitud'] ?>
                     </button>
-                </form>
+                </form> 
+            </td>
+            <td>
+                <form action="VerSolicitud.php" method="post">
+        <input type="hidden" name="num_solicitud" value="<?= $evento["num_solicitud"] ?>">
+        <button type="submit" class="btn btn-mirar"; style="padding: 10px 20px; background-color: darkblue; color: white; border: none; border-radius: 5px; cursor: pointer;">Detalles</button> 
+    </form>
             </td>
         </tr>
     <?php endforeach; ?>
