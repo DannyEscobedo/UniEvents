@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Corregido: Siempre garantizar que el valor sea "Si" o "No"
     $toma_fotografias = (isset($_POST["toma_fotografias"]) && $_POST["toma_fotografias"] === "sí") ? 1 : 0;
     $maestro_ceremonia = (isset($_POST["maestro_ceremonia"]) && $_POST["maestro_ceremonia"] === "sí") ? 1 : 0;
-   $display = isset($_POST["display"]) ? intval($_POST["display"]) : 0;
+    $display = isset($_POST["display"]) ? intval($_POST["display"]) : 0;
 
     $texto_display = $_POST["texto_display"] ?? null;
     $num_control = $_SESSION["usuario"]; // Asegurar que la variable tiene un valor antes de la consulta
