@@ -126,7 +126,6 @@ if (isset($_GET['accion'])) {
         <th>Hora Inicio</th>
         <th>Hora Fin</th>
         <th>Botones</th>
-        <th>Ver Solicitud</th>
     </tr>
     <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
@@ -144,12 +143,6 @@ if (isset($_GET['accion'])) {
                     <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
                     <button class="btn btn-rechazar" type="submit" onclick="return confirm('¿Estás seguro de querer rechazar esta solicitud?');">Rechazar</button>
                 </form>
-            </td>
-            <td>
-                <form action="VerSolicitud.php" method="post">
-        <input type="hidden" name="num_solicitud" value="<?= $row["num_solicitud"] ?>">
-        <button class="btn btn-mirar" type="submit">Ver Detalles</button>
-    </form>
             </td>
         </tr>
     <?php endwhile; ?>
