@@ -7,6 +7,39 @@ if (!isset($_SESSION["usuario"])) {
     exit();
 }
 
+// Buscar eventos aceptados sin personal, cuya hora de inicio esté a menos de una hora
+$asignacion_auto_sql = "
+SELECT e.num_solicitud, s.fecha_evento, s.hora_inicio
+FROM estatus_evento e
+INNER JOIN solicitud s ON e.num_solicitud = s.num_solicitud
+WHERE e.estatus = 'aceptado'
+AND NOT EXISTS (
+    SELECT 1 FROM puesto p WHERE p.num_solicitud = e.num_solicitud
+)
+";
+
+$asignacion_result = $conn->query($asignacion_auto_sql);
+
+while ($evento = $asignacion_result->fetch_assoc()) {
+    $fechaEvento = $evento['fecha_evento'];
+    $horaInicio = $evento['hora_inicio'];
+    $fechaHoraEvento = strtotime("$fechaEvento $horaInicio");
+    $unaHoraAntes = strtotime("-1 hour", $fechaHoraEvento);
+
+    if (time() >= $unaHoraAntes) {
+        $num_solicitud = $evento['num_solicitud'];
+
+        // Insertar 7 registros, uno por cada rol del 1 al 7
+        for ($rol = 1; $rol <= 7; $rol++) {
+            $insert_sql = "INSERT INTO puesto (rol_puesto, num_solicitud) VALUES (?, ?)";
+            $stmt = $conn->prepare($insert_sql);
+            $stmt->bind_param("ii", $rol, $num_solicitud);
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+}
+
 // Consulta eventos aceptados que aún NO tienen personal asignado
 $sql = "
 SELECT e.num_solicitud, s.fecha_evento, s.hora_inicio
@@ -34,6 +67,7 @@ while ($row = $result->fetch_assoc()) {
     $eventos_aceptados[] = $row;
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
