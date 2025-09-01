@@ -11,7 +11,7 @@ UniEvents+ es una página web creada con el principal propósito de facilitar la
 
 Es por eso mismo que UniEvents+ nace como una idea creada por los mismos alumnos de esta universidad para gestionar solicitudes de eventos (Aceptar, Rechazar y Modificar solicitudes) y así mismo gestionar la organización de los trabajadores de este departamento sistematizando y eficientando un proceso ya aplicado a mano.
 ```
-#### ** VERSIONES A CONSIDERAR PARA LA INSTALACIÓN: **
+VERSIONES A CONSIDERAR PARA LA INSTALACIÓN: 
 
 ⦁	XAMPP Control Panel V3.3.0
 ⦁	Windows 11
