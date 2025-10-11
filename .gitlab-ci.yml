@@ -28,6 +28,7 @@ build:
     - php -l index.php
   only:
     - main
+    - prueba
 
 test:
   stage: test
