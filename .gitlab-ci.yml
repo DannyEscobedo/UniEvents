@@ -58,3 +58,4 @@ test:
       junit: report.xml
   only:
     - main
+    - prueba
