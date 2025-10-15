@@ -170,12 +170,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <!-- Correo Institucional y su condiciones -->
-            <div class="input-box">
-                <input type="text" id="correo_ins" name="correo_ins" maxlength="27" placeholder="Correo Institucional">
-                <span class="error-message" id="error-correo"></span>
-                <i class="bx bxs-envelope"></i>
-            </div>
-
+           <div class="input-box correo-box">
+    <div class="correo-completo">
+        <input type="text" id="correo_usuario" name="correo_usuario" maxlength="9" placeholder="Ej. L21051423">
+        <span class="correo-dominio">@saltillo.tecnm.mx</span>
+    </div>
+    <!-- Campo oculto donde se guardará el correo completo -->
+    <input type="hidden" id="correo_ins" name="correo_ins">
+    <span class="error-message" id="error-correo"></span>
+    <i class="bx bxs-envelope"></i>
+</div>
             <!-- Nombre(s) y su condiciones -->
             <div class="input-box">
                 <input type="text" id="nombres_usuarios" name="nombres_usuarios" placeholder="Nombre(s)" maxlength="22">
@@ -198,7 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <!-- Botón de registrar y su condiciones -->
-            <button type="submit" id="btnRegistro" class="btn">Registrar</button>
+            <button type="submit" id="btnRegistro" class="btn">Crear Cuenta</button>
             <div class="inicioSesion-link">
                 <p>¿Ya tienes cuenta? <a href="IniciarSesion.php">Inicia sesión aquí</a></p>
             </div>
@@ -221,100 +225,188 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             top: 50%;
             transform: translateY(-50%);
         }
-    </style>
-    
-    <script>
-        // Permitir solo letras en los campos de nombre y apellidos
-        function soloLetras(event) {
-            let key = event.key;
-            if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(key)) {
-                event.preventDefault();
-            }
-        }
-        // Especificar datos en los que quiero solo letras (nombre y apellidos)
-        document.getElementById("nombres_usuarios").addEventListener("keypress", soloLetras);
-        document.getElementById("apellido_paterno").addEventListener("keypress", soloLetras);
-        document.getElementById("apellido_materno").addEventListener("keypress", soloLetras);
 
-        // Mensajes de error de todos los campos en caso de estar vacíos
-        document.getElementById("formRegistro").addEventListener("submit", function(event) {
-            let valid = true;
-            let campos = [
-                { id: "nombres_usuarios", errorId: "error-nombres", mensaje: "Completa este campo." },
-                { id: "apellido_paterno", errorId: "error-paterno", mensaje: "Completa este campo." },
-                { id: "apellido_materno", errorId: "error-materno", mensaje: "Completa este campo." },
-                { id: "num_control", errorId: "error-matricula", mensaje: "El número de control debe tener 8 dígitos." },
-                { id: "correo_ins", errorId: "error-correo", mensaje: "Completa este campo." },
-                { id: "contraseña", errorId: "error-password", mensaje: "Completa este campo." }
-            ];
-              //Valida campos vacíos y muestra/oculta mensajes de error.
-            campos.forEach(campo => {
-                let input = document.getElementById(campo.id);
-                let errorSpan = document.getElementById(campo.errorId);
-                if (input.value.trim() === "") {
-                    errorSpan.textContent = campo.mensaje;
-                    valid = false;
-                } else {
-                    errorSpan.textContent = "";
-                }
-            });
-
-            //Mensajes de error en caso de tener error en el campo de número de control
-            let num_control = document.getElementById("num_control").value.trim();
-            let errorMatricula = document.getElementById("error-matricula");
-            if (num_control.length !== 8 || isNaN(num_control)) {
-                errorMatricula.textContent = "El número de control debe tener 8 dígitos numéricos.";
-                valid = false;
-            }
-            // Mensajes de error en caso de tener error en el campo de correo institucional
-let correo = document.getElementById("correo_ins").value.trim();
-let errorCorreo = document.getElementById("error-correo");
-let dominio = "@saltillo.tecnm.mx";
-
-if (correo === "") {  
-    errorCorreo.textContent = "Completa este campo.";
-    valid = false;
-} else if (correo.length !== 27) {  
-    errorCorreo.textContent = "El correo debe tener exactamente 27 caracteres.";
-    valid = false;
-} else if (!correo.endsWith(dominio)) {  
-    errorCorreo.textContent = "El correo debe terminar en '@saltillo.tecnm.mx'.";
-    valid = false;
-} else {
-    errorCorreo.textContent = ""; 
+        /* === Estilo del campo de correo fusionado === */
+.correo-completo {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 40px;
+    padding: 0 15px;
+    height: 45px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    transition: 0.3s ease;
 }
-            //Mensajes de error en caso de tener errores con las validaciones de contraseña
-            let password = document.getElementById("contraseña").value.trim();
-            let errorPassword = document.getElementById("error-password");
-            let regexMayuscula = /[A-Z]/;
-            let regexMinuscula = /[a-z]/;
-            let regexNumero = /[0-9]/;
-            let regexSimbolo = /[!@#$%^&*(),.?":{}|<>]/;
-            let contraseñasComunes = ["123456", "password", "qwerty", "admin123", "abcdef", "12345678", "111111"];
-            if (password.length < 8) {
-                errorPassword.textContent = "Debe tener al menos 8 caracteres.";
-                valid = false;
-            } else if (!regexMayuscula.test(password)) {
-                errorPassword.textContent = "Debe incluir al menos una letra mayúscula.";
-                valid = false;
-            } else if (!regexMinuscula.test(password)) {
-                errorPassword.textContent = "Debe incluir al menos una letra minúscula.";
-                valid = false;
-            } else if (!regexNumero.test(password)) {
-                errorPassword.textContent = "Debe incluir al menos un número.";
-                valid = false;
-            } else if (!regexSimbolo.test(password)) {
-                errorPassword.textContent = "Debe incluir al menos un símbolo especial (!@#$%^&* etc.).";
-                valid = false;
-            } else if (contraseñasComunes.includes(password.toLowerCase())) {
-                errorPassword.textContent = "No uses una contraseña común.";
-                valid = false;
-            }
-            if (!valid) {
-                event.preventDefault();
-            }
-        });
-    </script>
+
+.correo-completo:focus-within {
+    border-color: rgba(0, 102, 255, 0.5);
+    box-shadow: 0 0 8px rgba(0, 102, 255, 0.3);
+}
+
+.correo-completo input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #000;
+    font-size: 16px;
+    padding-left: 10px;
+    padding-right: 130px;
+}
+
+.correo-dominio {
+    position: absolute;
+    right: 50px;
+    color: rgba(0, 0, 0, 0.4); 
+    font-size: 14px;
+    pointer-events: none;
+    user-select: none;
+}
+
+    </style>
+
+<script>
+// === FEATURE FLAG UNIFICADO ===
+false = Versión B (correo con dominio fijo + botón "Crear Cuenta")
+true = Versión A (correo completo + botón "Registrar")
+
+let featureFlag = Math.random() < 0.5; // 50% A / 50% B
+
+// === Referencias base ===
+let contenedorCorreo = document.querySelector(".correo-box") || document.querySelector(".input-box:nth-of-type(3)");
+let btn = document.getElementById("btnRegistro");
+
+// === CAMBIO DE CAMPO DE CORREO SEGÚN LA VERSIÓN ===
+if (featureFlag) {
+    // 🔹 Versión B (correo con dominio fijo)
+    contenedorCorreo.innerHTML = `
+        <div class="correo-completo">
+            <input type="text" id="correo_usuario" name="correo_usuario" maxlength="15" placeholder="Ej. L21051423">
+            <span class="correo-dominio">@saltillo.tecnm.mx</span>
+        </div>
+        <input type="hidden" id="correo_ins" name="correo_ins">
+        <span class="error-message" id="error-correo"></span>
+        <i class="bx bxs-envelope"></i>
+    `;
+    btn.textContent = "Crear Cuenta"; // cambio del texto del botón
+    console.log("✅ Versión B activa: correo con dominio fijo + botón 'Crear Cuenta'");
+} else {
+    // 🔹 Versión A (correo completo)
+    contenedorCorreo.innerHTML = `
+        <input type="text" id="correo_ins" name="correo_ins" maxlength="27" placeholder="Correo Institucional">
+        <span class="error-message" id="error-correo"></span>
+        <i class="bx bxs-envelope"></i>
+    `;
+    btn.textContent = "Registrar"; // texto original
+    console.log("✅ Versión A activa: correo completo + botón 'Registrar'");
+}
+
+// === MONITOREO DE INTERACCIÓN ===
+btn.addEventListener("click", () => {
+    if (featureFlag) {
+        console.log("🧪 Usuario interactuó con Versión B (correo con dominio fijo)");
+    } else {
+        console.log("🧪 Usuario interactuó con Versión A (correo completo)");
+    }
+});
+</script>
+
+
+  <script>
+document.getElementById("formRegistro").addEventListener("submit", function(event) {
+    let valid = true;
+
+    // === Validar campos vacíos (excepto correo, que se valida aparte)
+    let campos = [
+        { id: "nombres_usuarios", errorId: "error-nombres", mensaje: "Completa este campo." },
+        { id: "apellido_paterno", errorId: "error-paterno", mensaje: "Completa este campo." },
+        { id: "apellido_materno", errorId: "error-materno", mensaje: "Completa este campo." },
+        { id: "num_control", errorId: "error-matricula", mensaje: "El número de control debe tener 8 dígitos." },
+        { id: "contraseña", errorId: "error-password", mensaje: "Completa este campo." }
+    ];
+
+    campos.forEach(campo => {
+        let input = document.getElementById(campo.id);
+        let errorSpan = document.getElementById(campo.errorId);
+        if (input.value.trim() === "") {
+            errorSpan.textContent = campo.mensaje;
+            valid = false;
+        } else {
+            errorSpan.textContent = "";
+        }
+    });
+
+    // === Validar número de control ===
+    let num_control = document.getElementById("num_control").value.trim();
+    let errorMatricula = document.getElementById("error-matricula");
+    if (num_control.length !== 8 || isNaN(num_control)) {
+        errorMatricula.textContent = "El número de control debe tener 8 dígitos numéricos.";
+        valid = false;
+    } else {
+        errorMatricula.textContent = "";
+    }
+
+    // === Combinar el correo visible con el dominio fijo ===
+    let correoUsuario = document.getElementById("correo_usuario").value.trim();
+    let dominioFijo = "@saltillo.tecnm.mx";
+    let correoCompleto = correoUsuario + dominioFijo;
+
+    // ✅ Aquí llenamos el campo oculto ANTES de enviar
+    document.getElementById("correo_ins").value = correoCompleto;
+
+    // === Validar el correo institucional ===
+    let errorCorreo = document.getElementById("error-correo");
+    if (correoUsuario === "") {
+        errorCorreo.textContent = "Completa este campo.";
+        valid = false;
+    } else if (!/^[a-zA-Z0-9.]+$/.test(correoUsuario)) {
+        errorCorreo.textContent = "Solo se permiten letras, números y puntos.";
+        valid = false;
+    } else {
+        errorCorreo.textContent = "";
+    }
+
+    // === Validar la contraseña ===
+    let password = document.getElementById("contraseña").value.trim();
+    let errorPassword = document.getElementById("error-password");
+    let regexMayuscula = /[A-Z]/;
+    let regexMinuscula = /[a-z]/;
+    let regexNumero = /[0-9]/;
+    let regexSimbolo = /[!@#$%^&*(),.?":{}|<>]/;
+    let contraseñasComunes = ["123456", "password", "qwerty", "admin123", "abcdef", "12345678", "111111"];
+
+    if (password.length < 8) {
+        errorPassword.textContent = "Debe tener al menos 8 caracteres.";
+        valid = false;
+    } else if (!regexMayuscula.test(password)) {
+        errorPassword.textContent = "Debe incluir al menos una letra mayúscula.";
+        valid = false;
+    } else if (!regexMinuscula.test(password)) {
+        errorPassword.textContent = "Debe incluir al menos una letra minúscula.";
+        valid = false;
+    } else if (!regexNumero.test(password)) {
+        errorPassword.textContent = "Debe incluir al menos un número.";
+        valid = false;
+    } else if (!regexSimbolo.test(password)) {
+        errorPassword.textContent = "Debe incluir al menos un símbolo especial (!@#$%^&* etc.).";
+        valid = false;
+    } else if (contraseñasComunes.includes(password.toLowerCase())) {
+        errorPassword.textContent = "No uses una contraseña común.";
+        valid = false;
+    } else {
+        errorPassword.textContent = "";
+    }
+
+    // === Detener envío si hay errores ===
+    if (!valid) {
+        event.preventDefault();
+    }
+});
+</script>
+
 
     <script>
         //Funcion mirar/ocultar contraseña
