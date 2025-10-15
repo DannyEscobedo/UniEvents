@@ -36,19 +36,24 @@ test:
   script:
     - echo "Instalando Jest..."
     - npm install jest --save-dev
+    - echo "Creando archivo de test..."
     - |
-      cat > featureFlag.test.js <<'EOF'
+      cat <<'EOF' > featureFlag.test.js
       const fs = require("fs");
+
       test("Feature flag cambia texto", () => {
         const html = "<button id='btnRegistro'>Registrar</button>";
         global.document = { getElementById: () => ({ textContent: "" }) };
+
         let featureFlag = Math.random() < 0.5;
         let btn = { textContent: "" };
+
         if (featureFlag) {
           btn.textContent = "Crear Cuenta";
         } else {
           btn.textContent = "Registrar";
         }
+
         expect(["Registrar", "Crear Cuenta"]).toContain(btn.textContent);
       });
       EOF
@@ -58,6 +63,5 @@ test:
     reports:
       junit: report.xml
   only:
-    
     - main
     - prueba
