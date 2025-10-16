@@ -275,6 +275,7 @@ true = Versión A (correo completo + botón "Registrar")
 
 let featureFlag = Math.random() < 0.5; // 50% A / 50% B
 
+
 // === Referencias base ===
 let contenedorCorreo = document.querySelector(".correo-box") || document.querySelector(".input-box:nth-of-type(3)");
 let btn = document.getElementById("btnRegistro");
@@ -290,7 +291,7 @@ if (featureFlag) {
         <input type="hidden" id="correo_ins" name="correo_ins">
         <span class="error-message" id="error-correo"></span>
         <i class="bx bxs-envelope"></i>
-        
+
     `;
     btn.textContent = "Crear Cuenta"; // cambio del texto del botón
     console.log("✅ Versión B activa: correo con dominio fijo + botón 'Crear Cuenta'");
