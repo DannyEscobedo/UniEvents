@@ -269,7 +269,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 
 <script>
-// === FEATURE FLAG UNIFICADO ===
+// === FEATURE FLAG ===
 false = Versión B (correo con dominio fijo + botón "Crear Cuenta")
 true = Versión A (correo completo + botón "Registrar")
 
@@ -284,19 +284,20 @@ if (featureFlag) {
     // 🔹 Versión B (correo con dominio fijo)
     contenedorCorreo.innerHTML = `
         <div class="correo-completo">
-            <input type="text" id="correo_usuario" name="correo_usuario" maxlength="15" placeholder="Ej. L21051423">
+            <input type="text " id="correo_usuario" name="correo_usuario" maxlength="15" placeholder="Ej. L21051423">
             <span class="correo-dominio">@saltillo.tecnm.mx</span>
         </div>
         <input type="hidden" id="correo_ins" name="correo_ins">
         <span class="error-message" id="error-correo"></span>
         <i class="bx bxs-envelope"></i>
+        
     `;
     btn.textContent = "Crear Cuenta"; // cambio del texto del botón
     console.log("✅ Versión B activa: correo con dominio fijo + botón 'Crear Cuenta'");
 } else {
     // 🔹 Versión A (correo completo)
     contenedorCorreo.innerHTML = `
-        <input type="text" id="correo_ins" name="correo_ins" maxlength="27" placeholder="Correo Institucional">
+        <input type="text" id="correo_ins" name="correo_ins" maxlength="9" placeholder="Correo Institucional">
         <span class="error-message" id="error-correo"></span>
         <i class="bx bxs-envelope"></i>
     `;
