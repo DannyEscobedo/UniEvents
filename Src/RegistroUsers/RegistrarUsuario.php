@@ -280,6 +280,7 @@ let featureFlag = Math.random() < 0.5; // 50% A / 50% B
 let contenedorCorreo = document.querySelector(".correo-box") || document.querySelector(".input-box:nth-of-type(3)");
 let btn = document.getElementById("btnRegistro");
 
+
 // === CAMBIO DE CAMPO DE CORREO SEGÚN LA VERSIÓN ===
 if (featureFlag) {
     // 🔹 Versión B (correo con dominio fijo)
