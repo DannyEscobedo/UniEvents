@@ -318,6 +318,7 @@ btn.addEventListener("click", () => {
 </script>
 
 
+
   <script>
 document.getElementById("formRegistro").addEventListener("submit", function(event) {
     let valid = true;
