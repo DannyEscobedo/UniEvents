@@ -308,6 +308,7 @@ if (featureFlag) {
 }
 
 // === MONITOREO DE INTERACCIÓN ===
+// === MONITOREO DE INTERACCIÓN ===
 btn.addEventListener("click", () => {
     if (featureFlag) {
         console.log("🧪 Usuario interactuó con Versión B (correo con dominio fijo)");
